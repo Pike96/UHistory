@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "Save History Monthly to Google Drive",
+  "description": "Currently only can authorize",
+  "version": "0.1.3",
+  "permissions": [
+    "history",
+    "activeTab",
+    "tabs",
+    "identity",
+    "https://accounts.google.com/*", "https://www.googleapis.com/*"
+  ],
+  "browser_action": {
+    "default_icon": "extension128.png",
+    "default_popup": "popup.html"
+  },
+  "oauth2": {
+    "client_id": "445850840649-dtoda6de4ahk9l7ggo1d8usqa28bs3us.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.readonly"
+    ]
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoCZwRgoAn9G1YE1HVvNukK1V+qM4va4T6OO0VLFW5jF9wKG9yjGcWcg1aqciHP8tEp7zj7UV1aIxOr9MIW3PGBHoFDo7jbJBEjrO7LlwPFFPGB92IO7SdiMWioa8VbnjS/x+KxhXPjkrHfennXzmfFMYuhKclIsm2L0CSzYxp/JnJQ4981FNMyPZfeD87cbL2AJdXimP2r4LNvs/a76iDIMKAlk6SgNkBB9Ba+PPC6e7o5nVLXEouU2pn02Hd07AIvcqRmPsjhSL4h1PUYMw6+Yy6zEmuwMe83JEU3UQAR+irkIPGOuM7HRmAYAdz0OfP8eX7ZT849fvkxD6Qp/x+QIDAQAB",
+  "content_security_policy": "script-src 'self' https://netdna.bootstrapcdn.com https://cdnjs.cloudflare.com https://content.googleapis.com https://ajax.googleapis.com https://www.googleapis.com https://apis.google.com https://accounts.google.com https://oauth.googleusercontent.com https://ssl.gstatic.com https://docs.google.com; object-src 'self'"
+}
