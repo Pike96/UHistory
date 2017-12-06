@@ -1,8 +1,5 @@
 'use strict';
 
-var CLIENT_ID = '445850840649-dtoda6de4ahk9l7ggo1d8usqa28bs3us.apps.googleusercontent.com';
-var SCOPES = 'https://www.googleapis.com/auth/drive.file';
-
 function handleClientLoad() {
   // Load the API's client and auth2 modules.
   // Call the initClient function after the modules load.
@@ -20,8 +17,8 @@ function initClient() {
       signout();
     }
   });
-  $('#save-temp').click(function () {
-    saveTemp();
+  $('#backup-button').click(function () {
+    checker(backupHelper);
   });
 
   // Sign in on load by default
@@ -65,21 +62,64 @@ function signout() {
 
 function signinStatusListener() {
   if (gapi.auth.getToken() != null) {
-    $('#sign-in-or-out-button').html('Sign out');
+    $('#sign-in-or-out-button').html('Sign Out');
     $('#sign-in-or-out-button').css('display', 'inline-block');
-    $('#save-temp').css('display', 'inline-block');
-    $('#auth-status').html('You are currently signed in and have granted ' +
-      'access to this app.');
+    $('#sign-in-or-out-button').removeClass("btn-success");
+    $('#sign-in-or-out-button').addClass("btn btn-danger");
+    $('#backup-button').css('display', 'inline-block');
+    $('#backup-button').className = '';
+    $('#backup-button').addClass("btn btn-primary");
+    $('#signin-status').html('Authorized / Signed in.');
+    $('#signin-status').removeClass("alert-warning");
+    $('#signin-status').addClass("alert alert-info");
   } else {
     $('#sign-in-or-out-button').html('Sign In / Authorize');
     $('#sign-in-or-out-button').css('display', 'inline-block');
-    $('#save-temp').css('display', 'none');
-    $('#auth-status').html('You have not authorized this app or you are ' +
-      'signed out.');
+    $('#sign-in-or-out-button').removeClass("btn-danger");
+    $('#sign-in-or-out-button').addClass("btn btn-success");
+    $('#backup-button').css('display', 'none');
+    $('#signin-status').html('Unauthorized / Signed out.');
+    $('#signin-status').removeClass("alert-info");
+    $('#signin-status').addClass("alert alert-warning");
+    $('#backup-status').css('display', 'none');
   }
 }
 
-function saveTemp() {
+function checker(callback) {
+  var currentTime = new Date();
+  var fileName = "UHB" + 
+    currentTime.getFullYear() + currentTime.getMonth() + ".csv";
+  
+  gapi.client.drive.files.list({
+    'q': "trashed = false and name = '" + fileName + "'",
+    'fields': "nextPageToken, files(id, name)"
+  }).then(function (response) {
+    var files = response.result.files;
+    $('#backup-status').css('display', 'block');
+    if (files && files.length > 0) {
+      $('#backup-status').html("Found " + fileName +
+        '. No need to backup again.');
+      $('#backup-status').removeClass("alert-secondary");
+      $('#backup-status').addClass("alert alert-danger");
+      return true;
+    } else {
+      if (!callback) {
+        $('#backup-status').html('No last month backup. Backup Now! ');
+        $('#backup-status').className = '';
+        $('#backup-status').addClass("alert alert-danger");
+      } else {
+        $('#backup-status').html('Backuping ...');
+        $('#backup-status').removeClass("alert-danger");
+        $('#backup-status').addClass("alert alert-secondary");
+        callback();
+      }
+      return false;
+    }
+  });
+
+}
+
+function backupHelper() {
   // Find UHistoryBackup folder
   gapi.client.drive.files.list({
     'q': "mimeType = 'application/vnd.google-apps.folder' and name = 'UHistoryBackup'",
@@ -89,21 +129,20 @@ function saveTemp() {
     if (files && files.length > 0) {    // Folder found: Save
       historyReader(files[0].id, saveToFolder);
     } else {                            // Folder not found: Create folder
-      console.log("Folder not found");
       var folderMetadata = {
-        'name' : 'UHistoryBackup',
-        'mimeType' : 'application/vnd.google-apps.folder'
+        'name': 'UHistoryBackup',
+        'mimeType': 'application/vnd.google-apps.folder'
       };
       gapi.client.drive.files.create({
         resource: folderMetadata,
-      }).then(function(response) {
-        switch(response.status){
+      }).then(function (response) {
+        switch (response.status) {
           case 200:
             var file = response.result;
             historyReader(file.id, saveToFolder);
             break;
           default:
-            console.log('Error creating the folder, '+response);
+            console.log('Error creating the folder, ' + response);
             break;
         }
       });
@@ -116,14 +155,17 @@ function saveToFolder(fileData, folderID, callback) {
   const delimiter = "\r\n--" + boundary + "\r\n";
   const close_delim = "\r\n--" + boundary + "--";
 
+  var currentTime = new Date();
+  var fileName = "UHB" + currentTime.getFullYear() + currentTime.getMonth() + ".csv";
+
   var reader = new FileReader();
-  console.log(fileData);
   reader.readAsBinaryString(fileData);
   reader.onload = function(e) {
-    var contentType = fileData.type || 'application/octet-stream';
+    var contentType = fileData.type;
     var metadata = {
-      'title': "testName.csv",
-      'mimeType': contentType
+      'name': fileName,
+      'mimeType': contentType,
+      'parents': [folderID]
     };
 
     var base64Data = btoa(reader.result);
@@ -139,7 +181,7 @@ function saveToFolder(fileData, folderID, callback) {
       close_delim;
 
     var request = gapi.client.request({
-      'path': '/upload/drive/v2/files',
+      'path': '/upload/drive/v3/files',
       'method': 'POST',
       'params': {'uploadType': 'multipart'},
       'headers': {
@@ -152,14 +194,20 @@ function saveToFolder(fileData, folderID, callback) {
       };
     }
     request.execute(callback);
+    $('#backup-status').html('Backup finsished: ' + fileName);
+    $('#backup-status').className = '';
+    $('#backup-status').addClass("alert alert-success");
   }
 }
 
 function historyReader(folderID, callback) {
+  var currentTime = new Date();
+  var timeStartEnd = getLastMonthPeriod(currentTime);
   chrome.history.search({
     'text': '',
-    'maxResults': 100,
-    'startTime': 0
+    'maxResults': 9999999,
+    'startTime': timeStartEnd[0].getTime(),
+    'endTime': timeStartEnd[1].getTime()
   }, function (res) {
     window.res = res;
 
@@ -177,8 +225,8 @@ function historyReader(folderID, callback) {
       append("\n" + row);
     }
 
-    var bblob = new Blob([data.innerText], {type: 'application/octet-binary'});
-    callback(bblob, folderID);
+    var blob = new Blob([data.innerText], {type: 'application/octet-stream'});
+    callback(blob, folderID);
   });
 }
 
@@ -189,6 +237,22 @@ function append(text) {
 document.addEventListener('DOMContentLoaded', function () {
   window.data = document.getElementById('data');
 });
+
+function getLastMonthPeriod(time) {
+  var arr = new Array();
+  var start =  new Date(time.getTime());
+    start.setMonth(start.getMonth() - 1);
+    start.setDate(1);
+    start.setHours(0);
+    start.setMinutes(0);
+    start.setSeconds(0);
+    start.setMilliseconds(0);
+  var end = new Date(start.getTime());
+    end.setMonth(end.getMonth()+1);
+  arr.push(new Date(start.getTime()));
+  arr.push(new Date(end.getTime()));
+  return arr;
+}
 
 // Load api.js script to use gapi (Failed to include in html)
 load_script("https://apis.google.com/js/api.js");

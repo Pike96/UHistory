@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Save History Monthly to Google Drive",
-  "description": "Currently can save history into 'UHistoryBackup' folder (but cannot select date)",
-  "version": "0.1.4",
+  "description": "Can save last month history into 'UHistoryBackup' folder",
+  "version": "0.1.5",
   "permissions": [
     "history",
     "activeTab",
