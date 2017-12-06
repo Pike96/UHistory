@@ -9,12 +9,14 @@
       }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script type="text/javascript" src="popup.js"></script>
+    <script type="text/javascript" src="drive_api.js"></script>
   </head>
   <body>
     <div id="content" align="center">
-      <button id="sign-in-or-out-button">Sign In / Authorize</button>
+      <button id="save-temp" style="display: none; margin-right: 25px">Save</button>
+      <button id="sign-in-or-out-button" style="display: none">Sign In / Authorize</button>
     </div>
     <div id="auth-status" align="center" ></div>
+    <div id="data" style="display: none"></div>
   </body>
 </html>
