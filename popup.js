@@ -1,10 +1,23 @@
 'use strict';
 
+// Load api.js script to use gapi (Failed to include in html)
+load_script("https://apis.google.com/js/api.js");
+
+function load_script(src){
+  var script_url = document.createElement('script');
+  script_url.src = src;
+  script_url.async = true;
+  script_url.defer = false;
+  script_url.onload = handleClientLoad;
+  document.head.appendChild(script_url);
+}
+
 function handleClientLoad() {
   // Load the API's client and auth2 modules.
   // Call the initClient function after the modules load.
-  gapi.load('client:auth2', initClient);
+  gapi.load('client:auth2',initClient);
 }
+
 
 function initClient() {
   // Initialize the gapi.client object, which app uses to make API requests.
@@ -40,10 +53,6 @@ function signin() {
     gapi.client.load('drive', 'v3');
   });
 }
-
-// function refreshToken() {
-//   gapi.auth.authorize({'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': true});
-// }
 
 function signout() {
     if (gapi.auth.getToken() == null) {
@@ -87,9 +96,9 @@ function signinStatusListener() {
 
 function checker(callback) {
   var currentTime = new Date();
-  var fileName = "UHB" + 
+  var fileName = "UHB" +
     currentTime.getFullYear() + currentTime.getMonth() + ".csv";
-  
+
   gapi.client.drive.files.list({
     'q': "trashed = false and name = '" + fileName + "'",
     'fields': "nextPageToken, files(id, name)"
@@ -97,26 +106,30 @@ function checker(callback) {
     var files = response.result.files;
     $('#backup-status').css('display', 'block');
     if (files && files.length > 0) {
-      $('#backup-status').html("Found " + fileName +
-        '. No need to backup again.');
-      $('#backup-status').removeClass("alert-secondary");
-      $('#backup-status').addClass("alert alert-danger");
+      $('#backup-status').html("Backuped: " + fileName);
+      $('#backup-status').removeClass("alert-secondary alert-danger");
+      $('#backup-status').addClass("alert alert-success");
       return true;
     } else {
       if (!callback) {
-        $('#backup-status').html('No last month backup. Backup Now! ');
-        $('#backup-status').className = '';
-        $('#backup-status').addClass("alert alert-danger");
-      } else {
-        $('#backup-status').html('Backuping ...');
-        $('#backup-status').removeClass("alert-danger");
-        $('#backup-status').addClass("alert alert-secondary");
-        callback();
+        return false;
       }
+      $('#backup-status').html('Backuping ...');
+      $('#backup-status').removeClass("alert-danger alert-success");
+      $('#backup-status').addClass("alert alert-secondary");
+      callback();
+      setTimeout(progressChecker, 3000);
       return false;
     }
   });
+}
 
+function progressChecker() {
+  if (!checker()) {
+    $('#backup-status').html('Backup failed!');
+    $('#backup-status').removeClass("alert-secondary alert-success");
+    $('#backup-status').addClass("alert alert-danger");
+  }
 }
 
 function backupHelper() {
@@ -194,9 +207,6 @@ function saveToFolder(fileData, folderID, callback) {
       };
     }
     request.execute(callback);
-    $('#backup-status').html('Backup finsished: ' + fileName);
-    $('#backup-status').className = '';
-    $('#backup-status').addClass("alert alert-success");
   }
 }
 
@@ -238,31 +248,19 @@ document.addEventListener('DOMContentLoaded', function () {
   window.data = document.getElementById('data');
 });
 
+
 function getLastMonthPeriod(time) {
   var arr = new Array();
   var start =  new Date(time.getTime());
-    start.setMonth(start.getMonth() - 1);
-    start.setDate(1);
-    start.setHours(0);
-    start.setMinutes(0);
-    start.setSeconds(0);
-    start.setMilliseconds(0);
+  start.setMonth(start.getMonth() - 1);
+  start.setDate(1);
+  start.setHours(0);
+  start.setMinutes(0);
+  start.setSeconds(0);
+  start.setMilliseconds(0);
   var end = new Date(start.getTime());
-    end.setMonth(end.getMonth()+1);
+  end.setMonth(end.getMonth()+1);
   arr.push(new Date(start.getTime()));
   arr.push(new Date(end.getTime()));
   return arr;
 }
-
-// Load api.js script to use gapi (Failed to include in html)
-load_script("https://apis.google.com/js/api.js");
-
-function load_script(src){
-  var script_url = document.createElement('script');
-  script_url.src = src;
-  script_url.async = true;
-  script_url.defer = true;
-  script_url.onload = handleClientLoad;
-  document.head.appendChild(script_url);
-}
-

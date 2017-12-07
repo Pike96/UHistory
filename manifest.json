@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Save History Monthly to Google Drive",
-  "description": "Can save last month history into 'UHistoryBackup' folder",
-  "version": "0.1.5",
+  "description": "",
+  "version": "0.1.6",
   "permissions": [
     "history",
     "activeTab",
@@ -15,9 +15,7 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "page": "background.html"
   },
   "oauth2": {
     "client_id": "445850840649-dtoda6de4ahk9l7ggo1d8usqa28bs3us.apps.googleusercontent.com",
