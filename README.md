@@ -1,10 +1,27 @@
-# Chrome History Extension (Under Construction)
+# U History (Chrome Extension)
 
-Save chrome history monthly to Google Drive.
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FPike96%2FUHistory.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FPike96%2FUHistory?ref=badge_shield)
 
-May read saved history on Goolge Drive in future.
+[![](/pic/chrome-web-store.png "U History - Chrome Web Store")][webstore]
+
+U means Unlimited! Chrome only saves 90 days of history. Use this extension and save your history on Google Drive forever!
+
+
+### Features
+
+- Backup last month's browsing history to your Google Drive.
+
+- Automatically backup in background once authorized.
+
+- Only 1 computer's backup every month.
+
+- (May read saved history on Goolge Drive in future).
 
 ## Log
+
+- 171208 - Fix client id bug and others for chrome web store
+
+- 171208 - Add icons, Modify name
 
 - 171207 - Use AngularJS and NodeJS (gulp)
 
@@ -17,3 +34,6 @@ May read saved history on Goolge Drive in future.
 - 171205 - Can authorize
 
 - 171130 - Init
+
+--------------------------------
+[webstore]:https://chrome.google.com/webstore/detail/u-history/nkokmdpokpgocgabofnpkandjgchljgf

@@ -1,28 +1,38 @@
 {
   "manifest_version": 2,
-  "name": "Save History Monthly to Google Drive",
-  "description": "",
-  "version": "0.1.8",
+  "name": "U History",
+  "author": "Pike96",
+  "description": "Backup Chrome History to Your Google Drive",
+  "version": "0.2.0",
   "permissions": [
     "history",
     "activeTab",
     "tabs",
     "identity",
-    "https://accounts.google.com/*", "https://www.googleapis.com/*"
+    "https://accounts.google.com/*",
+    "https://www.googleapis.com/*"
   ],
+  "icons": {
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  },
   "browser_action": {
-    "default_icon": "img/extension128.png",
+    "default_icon": {
+      "19": "img/icon19.png",
+      "38": "img/icon38.png"
+    },
     "default_popup": "html/popup.html"
   },
   "background": {
     "page": "html/background.html"
   },
   "oauth2": {
-    "client_id": "445850840649-dtoda6de4ahk9l7ggo1d8usqa28bs3us.apps.googleusercontent.com",
+    "client_id": "445850840649-0uncfbdu7foj97slpoonrc56nv205dpa.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/drive.file"
     ]
   },
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoCZwRgoAn9G1YE1HVvNukK1V+qM4va4T6OO0VLFW5jF9wKG9yjGcWcg1aqciHP8tEp7zj7UV1aIxOr9MIW3PGBHoFDo7jbJBEjrO7LlwPFFPGB92IO7SdiMWioa8VbnjS/x+KxhXPjkrHfennXzmfFMYuhKclIsm2L0CSzYxp/JnJQ4981FNMyPZfeD87cbL2AJdXimP2r4LNvs/a76iDIMKAlk6SgNkBB9Ba+PPC6e7o5nVLXEouU2pn02Hd07AIvcqRmPsjhSL4h1PUYMw6+Yy6zEmuwMe83JEU3UQAR+irkIPGOuM7HRmAYAdz0OfP8eX7ZT849fvkxD6Qp/x+QIDAQAB",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvnQv8WfCcS0XIWG2oNLHdJBIPH5QvHsXEeeiAwSbTE/Leh/DsfHdpevD/mwFR55kJRZ4drP/GX/ikIkYZDlsEQ06uTPlsuDA2j/gaDDf+ZblhQpaOgeTbq7yO201kIpmu+u/JsrO7KB3c0q7y8Y+q/N8xLZC6ZjkpygBcs5y/J/SPQSPeR5sXOqPBVpKMqiVPZRsSUq95g0/w7/eU+ajMDBxJlVkw8OkpA9nRap506FPQeBp2eZXUlENHbt3QKsz5kmsQU2oUhJ+7VWsa1Sw0PTY3GxdNF1k58yCYLe+c4MU2D64yn15FQ3Sa712UZT0Tvel+AhrdYjoB3fJ2PFECwIDAQAB",
   "content_security_policy": "script-src 'self' https://netdna.bootstrapcdn.com https://cdnjs.cloudflare.com https://content.googleapis.com https://ajax.googleapis.com https://www.googleapis.com https://apis.google.com https://accounts.google.com https://oauth.googleusercontent.com https://ssl.gstatic.com https://docs.google.com; object-src 'self'"
 }
