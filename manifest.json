@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Save History Monthly to Google Drive",
   "description": "",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "permissions": [
     "history",
     "activeTab",

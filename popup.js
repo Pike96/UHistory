@@ -118,7 +118,7 @@ function checker(callback) {
       $('#backup-status').removeClass("alert-danger alert-success");
       $('#backup-status').addClass("alert alert-secondary");
       callback();
-      setTimeout(progressChecker, 3000);
+      setTimeout(progressChecker, 6000);
       return false;
     }
   });

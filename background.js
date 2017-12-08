@@ -3,8 +3,11 @@
 var CLIENT_ID = "445850840649-dtoda6de4ahk9l7ggo1d8usqa28bs3us.apps.googleusercontent.com";
 var SCOPES = "https://www.googleapis.com/auth/drive.file";
 
+var firstAuth =  setTimeout(refreshToken, 1000);
+var autoAuth = setInterval(refreshToken, 1800000); // 30 min
+
 // Load api.js script to use gapi (Failed to include in html)
-load_script("https://apis.google.com/js/client.js");
+load_script("https://apis.google.com/js/api.js");
 
 function load_script(src){
   var script_url = document.createElement('script');
@@ -15,18 +18,23 @@ function load_script(src){
   document.head.appendChild(script_url);
 }
 
-var firstAuth = setInterval(refreshToken, 1000);
-var autoAuth = setInterval(refreshToken, 1800000); // 30 min
-
 function refreshToken() {
   if (typeof gapi === 'undefined') {
     return;
   }
-  clearInterval(firstAuth);
-  gapi.auth.authorize({'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': true});
-  gapi.client.load('drive', 'v3').then(function() {
-    handleClientLoad();
-    checker(backupHelper);
+  // gapi.auth.authorize({'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': true});
+  // gapi.client.load('drive', 'v3').then(function() {
+  //   checker(backupHelper);
+  // });
+
+  chrome.identity.getAuthToken({ 'interactive': false }, function(token) {
+    if (token == null) {
+      return;
+    }
+    gapi.auth.setToken({ 'access_token': token });
+    gapi.client.load('drive', 'v3').then(function() {
+        checker(backupHelper);
+      });
   });
 }
 
@@ -37,6 +45,9 @@ function handleClientLoad() {
 }
 
 function checker(callback) {
+  if (typeof gapi === 'undefined') {
+    return;
+  }
   var currentTime = new Date();
   var fileName = "UHB" +
     currentTime.getFullYear() + currentTime.getMonth() + ".csv";
@@ -47,15 +58,15 @@ function checker(callback) {
   }).then(function (response) {
     var files = response.result.files;
     if (files && files.length > 0) {
-      document.write("Backuped: " + fileName);
+      //document.write("Backuped: " + fileName);
       return true;
     } else {
       if (!callback) {
         return false;
       }
-      document.write("Backuping ...");
+      //document.write("Backuping ...");
       callback();
-      setTimeout(progressChecker, 3000);
+      setTimeout(progressChecker, 6000);
       return false;
     }
   });
@@ -63,7 +74,7 @@ function checker(callback) {
 
 function progressChecker() {
   if (!checker()) {
-    document.write("Backup failed!");
+    //document.write("Backup failed!");
   }
 }
 
