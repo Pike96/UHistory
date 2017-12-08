@@ -1,4 +1,6 @@
 # Chrome History Extension (Under Construction)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FPike96%2FUHistory.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FPike96%2FUHistory?ref=badge_shield)
+
 
 Save chrome history monthly to Google Drive.
 
@@ -17,3 +19,7 @@ May read saved history on Goolge Drive in future.
 - 171205 - Can authorize
 
 - 171130 - Init
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FPike96%2FUHistory.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FPike96%2FUHistory?ref=badge_large)
