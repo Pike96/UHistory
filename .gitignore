@@ -1,3 +1,9 @@
 *.zip
 *.sublime-project
 *.sublime-workspace
+
+.DS_Store
+.tmp
+dist
+compiled
+node_modules

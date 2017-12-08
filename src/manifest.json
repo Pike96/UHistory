@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Save History Monthly to Google Drive",
   "description": "",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "permissions": [
     "history",
     "activeTab",
@@ -11,11 +11,11 @@
     "https://accounts.google.com/*", "https://www.googleapis.com/*"
   ],
   "browser_action": {
-    "default_icon": "extension128.png",
-    "default_popup": "popup.html"
+    "default_icon": "img/extension128.png",
+    "default_popup": "html/popup.html"
   },
   "background": {
-    "page": "background.html"
+    "page": "html/background.html"
   },
   "oauth2": {
     "client_id": "445850840649-dtoda6de4ahk9l7ggo1d8usqa28bs3us.apps.googleusercontent.com",
