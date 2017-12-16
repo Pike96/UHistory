@@ -8,9 +8,9 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 
 ### Features
 
-- Backup last month's browsing history to your Google Drive.
+- Backup selected month browsing history to your Google Drive.
 
-- Automatically backup in background once authorized.
+- Automatically backup last month history in background once authorized.
 
 - Only 1 computer's backup every month.
 
@@ -18,6 +18,8 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 
 
 ## Log
+
+- 171215 - Select month to backup. Fix backup status bug.
 
 - 171208 - Fix client id bug and others for chrome web store
 

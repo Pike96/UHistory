@@ -6,7 +6,11 @@ popupMod.config(function ($compileProvider) {
   $compileProvider.aHrefSanitizationWhitelist (/^\s*(https?|ftp|file|chrome-extension):/);
 });
 
-popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', function PopupCtrl($scope, $window, $filter, $interval) {
+popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', 
+    function PopupCtrl($scope, $window, $filter, $interval) {
+  // $window.monthNames = new Array("Jan", "Feb", "Mar",
+  //       "Apr", "May", "Jun", "Jul", "Aug", "Sep",
+  //       "Oct", "Nov", "Dec");
   $scope.authButtonHandler = function () {
     if (gapi.auth.getToken() == null) {
       signin();
@@ -15,7 +19,18 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', f
     }
   }
 
-  $scope.backupButtonHandler = function () {
+  $scope.backupButton1Handler = function () {
+    $window.monthdiff = 1;
+    $scope.checker($scope.backupHelper);
+  }
+
+  $scope.backupButton2Handler = function () {
+    $window.monthdiff = 2;
+    $scope.checker($scope.backupHelper);
+  }
+
+  $scope.backupButton3Handler = function () {
+    $window.monthdiff = 3;
     $scope.checker($scope.backupHelper);
   }
 
@@ -23,7 +38,8 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', f
   $scope.checker = function (callback) {
     var currentTime = new Date();
     var fileName = "UHB" +
-      currentTime.getFullYear() + currentTime.getMonth() + ".csv";
+      currentTime.getFullYear() +
+        monthNames[currentTime.getMonth() - $window.monthdiff] + ".csv";
 
     gapi.client.drive.files.list({
       'q': "trashed = false and name = '" + fileName + "'",
@@ -32,7 +48,7 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', f
       var files = response.result.files;
       angular.element($('#backup-status')).css('display', 'block');
       if (files && files.length > 0) {
-        angular.element($('#backup-status')).html("Backuped: " + fileName);
+        angular.element($('#backup-status')).html("Already Backuped: " + fileName);
         angular.element($('#backup-status')).removeClass("alert-secondary alert-danger");
         angular.element($('#backup-status')).addClass("alert alert-success");
         return true;
@@ -44,18 +60,9 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', f
         angular.element($('#backup-status')).removeClass("alert-danger alert-success");
         angular.element($('#backup-status')).addClass("alert alert-secondary");
         callback();
-        setTimeout($scope.progressChecker, 6000);
         return false;
       }
     });
-  }
-
-  $scope.progressChecker = function () {
-    if (!$scope.checker()) {
-      angular.element($('#backup-status')).html('Backup failed!');
-      angular.element($('#backup-status')).removeClass("alert-secondary alert-success");
-      angular.element($('#backup-status')).addClass("alert alert-danger");
-    }
   }
 
   $scope.backupHelper = function () {
@@ -95,7 +102,8 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', f
     const close_delim = "\r\n--" + boundary + "--";
 
     var currentTime = new Date();
-    var fileName = "UHB" + currentTime.getFullYear() + currentTime.getMonth() + ".csv";
+    var fileName = "UHB" + currentTime.getFullYear() +
+      monthNames[currentTime.getMonth() - $window.monthdiff] + ".csv";
 
     var reader = new FileReader();
     reader.readAsBinaryString(fileData);
@@ -133,6 +141,9 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', f
         };
       }
       request.execute(callback);
+      angular.element($('#backup-status')).html("Backup OK: " + fileName);
+      angular.element($('#backup-status')).removeClass("alert-secondary alert-danger");
+      angular.element($('#backup-status')).addClass("alert alert-success");
     }
   }
 
@@ -146,6 +157,13 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', f
       'endTime': timeStartEnd[1].getTime()
     }, function (res) {
       $window.res = res;
+      if (res.length == 0) {
+        angular.element($('#backup-status')).html('Backup failed! No history found in this month!');
+        angular.element($('#backup-status')).removeClass("alert-secondary alert-success");
+        angular.element($('#backup-status')).addClass("alert alert-danger");
+        $window.errinfo = undefined;
+        return;
+      }
 
       // header row
       var keys = Object.keys(res[0]);
@@ -177,7 +195,7 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', f
   $scope.getLastMonthPeriod = function (time) {
     var arr = new Array();
     var start =  new Date(time.getTime());
-    start.setMonth(start.getMonth() - 1);
+    start.setMonth(start.getMonth() - $window.monthdiff);
     start.setDate(1);
     start.setHours(0);
     start.setMinutes(0);
@@ -190,6 +208,10 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', f
     return arr;
   }
 }]);
+
+var monthNames = new Array("Jan", "Feb", "Mar",
+  "Apr", "May", "Jun", "Jul", "Aug", "Sep",
+  "Oct", "Nov", "Dec");
 
 function handleClientLoad() {
   // Load the API's client and auth2 modules.
@@ -237,14 +259,23 @@ function signout() {
 }
 
 function signinStatusListener() {
+  var time = new Date();
+  time.setMonth(time.getMonth() - 1);
+  var monthl = time.getMonth();
+  time.setMonth(monthl - 1);
+  var monthll = time.getMonth();
+  time.setMonth(monthll - 1);
+  var monthlll = time.getMonth();
   if (gapi.auth.getToken() != null) {
     $('#auth-button').html('Sign Out');
     $('#auth-button').css('display', 'inline-block');
     $('#auth-button').removeClass("btn-success");
     $('#auth-button').addClass("btn btn-danger");
-    $('#backup-button').css('display', 'inline-block');
-    $('#backup-button').className = '';
-    $('#backup-button').addClass("btn btn-primary");
+    $('#backup-label').css('display', 'inline-block');
+    $('.btn-group').css('display', 'inline-block');
+    $('#backup-button1').html(monthNames[monthl]);
+    $('#backup-button2').html(monthNames[monthll]);
+    $('#backup-button3').html(monthNames[monthlll]);
     $('#signin-status').html('Authorized / Signed in.');
     $('#signin-status').removeClass("alert-warning");
     $('#signin-status').addClass("alert alert-info");
@@ -253,7 +284,8 @@ function signinStatusListener() {
     $('#auth-button').css('display', 'inline-block');
     $('#auth-button').removeClass("btn-danger");
     $('#auth-button').addClass("btn btn-success");
-    $('#backup-button').css('display', 'none');
+    $('#backup-label').css('display', 'none');
+    $('.btn-group').css('display', 'none');
     $('#signin-status').html('Unauthorized / Signed out.');
     $('#signin-status').removeClass("alert-info");
     $('#signin-status').addClass("alert alert-warning");

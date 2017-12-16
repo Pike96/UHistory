@@ -2,8 +2,8 @@
   "manifest_version": 2,
   "name": "U History",
   "author": "Pike96",
-  "description": "Backup Chrome History to Your Google Drive",
-  "version": "0.2.0",
+  "description": "U History - Backup Chrome History to Your Google Drive",
+  "version": "0.2.1",
   "permissions": [
     "history",
     "activeTab",

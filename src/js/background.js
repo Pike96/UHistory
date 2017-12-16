@@ -56,16 +56,9 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
         }
         //document.write("Backuping ...");
         callback();
-        setTimeout($scope.progressChecker, 6000);
         return false;
       }
     });
-  }
-
-  $scope.progressChecker = function () {
-    if (!$scope.checker()) {
-      //document.write("Backup failed!");
-    }
   }
 
   $scope.backupHelper = function () {

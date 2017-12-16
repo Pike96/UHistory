@@ -1,6 +1,6 @@
 {
   "name": "UHistory",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Backup Chrome History to Your Google Drive",
   "main": "gulpfile.js",
   "keywords": [
