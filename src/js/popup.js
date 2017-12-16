@@ -22,6 +22,7 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
   $scope.backupButton1Handler = function () {
     $window.monthdiff = 1;
     $scope.checker($scope.backupHelper);
+    $scope.getList();
   }
 
   $scope.backupButton2Handler = function () {
@@ -108,7 +109,7 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
     var reader = new FileReader();
     reader.readAsBinaryString(fileData);
     reader.onload = function(e) {
-      var contentType = fileData.type;
+      var contentType = 'application/vnd.google-apps.spreadsheet';
       var metadata = {
         'name': fileName,
         'mimeType': contentType,
@@ -179,7 +180,7 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
         $scope.append("\n" + row);
       }
 
-      var blob = new Blob([data.innerText], {type: 'application/octet-stream'});
+      var blob = new Blob([data.innerText], {type: 'application/octet-steam'});
       callback(blob, folderID);
     });
   }
@@ -207,6 +208,48 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
     arr.push(new Date(end.getTime()));
     return arr;
   }
+
+  // $scope.getList = function () {
+  //   gapi.client.drive.files.list({
+  //     'q': "trashed = false and name contains 'UHB'",
+  //     'fields': "nextPageToken, files(id, name)"
+  //   }).then(function (response) {
+  //     var files = response.result.files;
+  //     $scope.readFile(files[0].id);
+  //   });
+  // }
+  //
+  // $scope.readFile = function (fileID) {
+  //   gapi.client.drive.files.export({
+  //     'fileId' : fileID,
+  //     'mimeType' : 'text/csv'
+  //   }).then(function(success){
+  //     console.log(success);
+  //     var code = success.result;
+  //   }, function(fail){
+  //     console.log(fail);
+  //     console.log('Error '+ fail.result.error.message);
+  //   })
+  // }
+
+      // V2
+  // $scope.readFile = function (fileID) {
+  //   gapi.client.request({'path': '/drive/v3/files/'+fileID,'method': 'GET',callback: function ( theResponseJS, theResponseTXT ) {
+  //       var myToken = gapi.auth.getToken();
+  //       var myXHR   = new XMLHttpRequest();
+  //       myXHR.open('GET', theResponseJS.downloadUrl, true );
+  //       myXHR.setRequestHeader('Authorization', 'Bearer ' + myToken.access_token );
+  //       myXHR.onreadystatechange = function( theProgressEvent ) {
+  //         if (myXHR.readyState == 4) {
+  //           if ( myXHR.status == 200 ) {
+  //             var code = myXHR.response;
+  //           }
+  //         }
+  //       }
+  //       myXHR.send();
+  //     }
+  //   });
+  // }
 }]);
 
 var monthNames = new Array("Jan", "Feb", "Mar",

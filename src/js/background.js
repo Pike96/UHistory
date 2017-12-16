@@ -7,6 +7,9 @@ bgMod.config(function ($compileProvider) {
 });
 
 bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', function BgCtrl($scope, $window, $filter, $interval) {
+  $scope.monthNames = new Array("Jan", "Feb", "Mar",
+    "Apr", "May", "Jun", "Jul", "Aug", "Sep",
+    "Oct", "Nov", "Dec");
   $scope.firstAuth = $interval(function () {
     $scope.refreshToken()
   }, 1000, 1);
@@ -40,7 +43,8 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
     }
     var currentTime = new Date();
     var fileName = "UHB" +
-      currentTime.getFullYear() + currentTime.getMonth() + ".csv";
+      currentTime.getFullYear() +
+        $scope.monthNames[currentTime.getMonth() - 1] + ".csv";
 
     gapi.client.drive.files.list({
       'q': "trashed = false and name = '" + fileName + "'",
@@ -98,12 +102,13 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
     const close_delim = "\r\n--" + boundary + "--";
 
     var currentTime = new Date();
-    var fileName = "UHB" + currentTime.getFullYear() + currentTime.getMonth() + ".csv";
+    var fileName = "UHB" + currentTime.getFullYear() +
+      $scope.monthNames[currentTime.getMonth() - 1] + ".csv";
 
     var reader = new FileReader();
     reader.readAsBinaryString(fileData);
     reader.onload = function(e) {
-      var contentType = fileData.type;
+      var contentType = 'application/vnd.google-apps.spreadsheet';
       var metadata = {
         'name': fileName,
         'mimeType': contentType,
