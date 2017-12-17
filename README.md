@@ -12,7 +12,7 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 
 - Automatically backup last month history in background once authorized.
 
-- Read saved history on Goolge Drive in future (UI from [iBROWSE]).
+- Read saved history on Goolge Drive (UI from [iBROWSE]).
 
 - Only 1 computer's backup every month.
 

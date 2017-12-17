@@ -14,26 +14,26 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
     } else {
       signout();
     }
-  }
+  };
 
   $scope.backupButton1Handler = function () {
     $window.monthdiff = 1;
     $scope.checker($scope.backupHelper);
-  }
+  };
 
   $scope.backupButton2Handler = function () {
     $window.monthdiff = 2;
     $scope.checker($scope.backupHelper);
-  }
+  };
 
   $scope.backupButton3Handler = function () {
     $window.monthdiff = 3;
     $scope.checker($scope.backupHelper);
-  }
+  };
 
   $scope.readButtonHandler = function () {
     chrome.tabs.create({ url: chrome.runtime.getURL("../html/index.html") });
-  }
+  };
 
 
   $scope.checker = function (callback) {
@@ -64,13 +64,13 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
         return false;
       }
     });
-  }
+  };
 
   $scope.progressChecker = function () {
     if ($scope.checker()) {
       clearInterval(check);
     }
-  }
+  };
 
   $scope.backupHelper = function () {
     // Find UHistoryBackup folder
@@ -87,7 +87,7 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
           'mimeType': 'application/vnd.google-apps.folder'
         };
         gapi.client.drive.files.create({
-          resource: folderMetadata,
+          resource: folderMetadata
         }).then(function (response) {
           switch (response.status) {
             case 200:
@@ -101,7 +101,7 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
         });
       }
     });
-  }
+  };
 
   $scope.saveToFolder = function (fileData, folderID, callback) {
     var boundary = '-------314159265358979323846';
@@ -149,7 +149,7 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
       }
       request.execute(callback);
     }
-  }
+  };
 
   $scope.historyReader = function (folderID, callback) {
     var currentTime = new Date();
@@ -161,7 +161,7 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
       'endTime': timeStartEnd[1].getTime()
     }, function (res) {
       $window.res = res;
-      if (res.length == 0) {
+      if (res.length === 0) {
         angular.element($('#backup-status')).html('Backup failed! No history found in this month!');
         angular.element($('#backup-status')).removeClass("alert-secondary alert-success");
         angular.element($('#backup-status')).addClass("alert alert-danger");
@@ -186,18 +186,18 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
       var blob = new Blob([data.innerText], {type: 'application/octet-steam'});
       callback(blob, folderID);
     });
-  }
+  };
 
   $scope.append = function (text) {
     $window.data.appendChild(document.createTextNode(text));
-  }
+  };
 
   document.addEventListener('DOMContentLoaded', function () {
     $window.data = document.getElementById('data');
   });
 
   $scope.getLastMonthPeriod = function (time) {
-    var arr = new Array();
+    var arr = [];
     var start =  new Date(time.getTime());
     start.setMonth(start.getMonth() - $window.monthdiff);
     start.setDate(1);
@@ -213,9 +213,9 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
   }
 }]);
 
-var monthNames = new Array("Jan", "Feb", "Mar",
+var monthNames = ["Jan", "Feb", "Mar",
   "Apr", "May", "Jun", "Jul", "Aug", "Sep",
-  "Oct", "Nov", "Dec");
+  "Oct", "Nov", "Dec"];
 
 function handleClientLoad() {
   // Load the API's client and auth2 modules.
@@ -273,6 +273,7 @@ function signinStatusListener() {
   if (gapi.auth.getToken() != null) {
     $('#auth-button').html('Sign Out');
     $('#auth-button').css('display', 'inline-block');
+    $('#auth-button').css('margin-top', '30px');
     $('#auth-button').removeClass("btn-success");
     $('#auth-button').addClass("btn btn-danger");
     $('#backup-label').css('display', 'inline-block');
@@ -288,6 +289,7 @@ function signinStatusListener() {
   } else {
     $('#auth-button').html('Sign In / Authorize');
     $('#auth-button').css('display', 'inline-block');
+    $('#auth-button').css('margin-top', '10px');
     $('#auth-button').removeClass("btn-danger");
     $('#auth-button').addClass("btn btn-success");
     $('#backup-label').css('display', 'none');

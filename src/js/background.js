@@ -7,9 +7,9 @@ bgMod.config(function ($compileProvider) {
 });
 
 bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', function BgCtrl($scope, $window, $filter, $interval) {
-  $scope.monthNames = new Array("Jan", "Feb", "Mar",
+  $scope.monthNames = ["Jan", "Feb", "Mar",
     "Apr", "May", "Jun", "Jul", "Aug", "Sep",
-    "Oct", "Nov", "Dec");
+    "Oct", "Nov", "Dec"];
   $scope.firstAuth = $interval(function () {$scope.refreshToken()}, 1000, 1);
   $scope.autoAuth = $interval(function () {$scope.refreshToken()}, 1800000);// 30 min
 
@@ -181,7 +181,7 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
   });
 
   $scope.getLastMonthPeriod = function (time) {
-    var arr = new Array();
+    var arr = [];
     var start =  new Date(time.getTime());
     start.setMonth(start.getMonth() - 1);
     start.setDate(1);

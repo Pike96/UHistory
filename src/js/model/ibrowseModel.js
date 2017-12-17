@@ -1,3 +1,8 @@
+function handleClientLoad() {
+  // Load the API's client and auth2 modules.
+  gapi.load('client:auth2');
+}
+
 var IbrowseModel = function() {
 
 	var history 			= [];
@@ -68,14 +73,13 @@ var IbrowseModel = function() {
           var files = response.result.files;
           var i = 0;
           loop(files, i);
-          // }
         });
       });
     });
 	}
 
 	function loop(files, i) {
-    if (i == files.length - 1) {
+    if (i === files.length - 1) {
       readFile(files[i].id, files, i, afterRead);
     } else {
       readFile(files[i].id, files, i, loop);
@@ -96,43 +100,21 @@ var IbrowseModel = function() {
     setSelectedItem(days[days.length - 1]);
   }
 
-  // function readFile(fileID, files, i, callback) {
-  //   gapi.client.drive.files.export({
-  //     'fileId' : fileID,
-  //     'mimeType' : 'text/csv'
-  //   }).then(function(success){
-  //     console.log(success);
-  //     var subHistory = success.body.substring(success.body.indexOf("\n") + 1);
-  //     subHistory = $.csv.toArrays(subHistory, {separator: '`'});
-  //     historyAdd(subHistory);
-  //     if (callback) {
-  //       callback(files, i + 1);
-  //     }
-  //   }, function(fail){
-  //     console.log(fail);
-  //     console.log('Error '+ fail.result.error.message);
-  //   })
-  // }
-
   function readFile(fileID, files, i, callback) {
-    gapi.client.request({'path': '/drive/v2/files/'+fileID,'method': 'GET',callback: function ( theResponseJS, theResponseTXT ) {
-        var myToken = gapi.auth.getToken();
-        var myXHR   = new XMLHttpRequest();
-        myXHR.open('GET', theResponseJS.downloadUrl, true );
-        myXHR.setRequestHeader('Authorization', 'Bearer ' + myToken.access_token );
-        myXHR.onreadystatechange = function( theProgressEvent ) {
-          if (myXHR.readyState == 4) {
-            if ( myXHR.status == 200 ) {
-              var subHistory = myXHR.response.substring(myXHR.response.indexOf("\n") + 1);
-              subHistory = $.csv.toArrays(subHistory, {separator: '|@|@', delimiter:'```'});
-              historyAdd(subHistory);
-              if (callback) {
-                callback(files, i + 1);
-              }
-            }
-          }
+    var myToken = gapi.auth.getToken();
+    gapi.client.request({
+      'path': '/drive/v3/files/' + fileID,
+      'method': 'GET',
+      'params': {'alt': 'media'},
+      'headers': {'Authorization': 'Bearer ' + myToken.access_token},
+      callback: function (resp, raw_resp) {
+        var resData = JSON.parse(raw_resp).gapiRequest.data.body;
+        var subHistory = resData.substring(resData.indexOf("\n") + 1);
+        subHistory = $.csv.toArrays(subHistory, {separator: '|@|@', delimiter:'```'});
+        historyAdd(subHistory);
+        if (callback) {
+          callback(files, i + 1);
         }
-        myXHR.send();
       }
     });
   }
@@ -582,10 +564,4 @@ var IbrowseModel = function() {
 	};
 
 
-}
-
-function handleClientLoad() {
-  // Load the API's client and auth2 modules.
-  // Call the initClient function after the modules load.
-  gapi.load('client:auth2');
 }
