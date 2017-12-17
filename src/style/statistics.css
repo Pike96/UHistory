@@ -1,0 +1,117 @@
+#statistics
+{
+	width: 735px;
+	margin:auto;
+	margin-bottom:20px;
+}
+
+#statisticsBox
+{
+	text-align: center;
+	font-size: 18px;
+	color: #555;
+	width:100%;
+}
+
+#visitsTitle
+{
+	float:left;
+	font-family: 'Fjalla One', sans-serif;
+	text-transform: uppercase;
+	font-size: 20px;
+}
+
+ul#topSitesList
+{	
+	width:150px;
+	margin-top: 100px;
+	float: right;
+	list-style:none;
+	float:left;
+	margin-left: 0px;
+	padding-left: 0px;
+}
+
+ul#topSitesList li
+{	
+	width:200px;
+}
+
+#topSitesVisitsTitle
+{
+	width:100%;
+	float:left;
+	text-align: right;
+}
+
+ul#topSitesList .legendColor
+{
+	float: left;
+	width: 16px;
+	height: 16px;
+	margin-right: 10px;
+	margin-top: 3px;
+}
+
+ul#topSitesList .topSitesURL
+{	
+	width: 150px;
+	overflow: hidden;
+}
+
+ul#topSitesList .topSitesVisits
+{	
+	float:right;
+	margin-top: -19px;
+}
+
+#visitsBox
+{
+	float:left;
+	width:100%;
+	text-align: left;
+	font-size: 14px;
+	color: #333;
+	margin-top: 10px;
+	margin-bottom: 30px;
+}
+
+#visitsBox .btn-group
+{
+float: right;
+}
+
+#bargraph
+{
+margin-left: -10px;
+}
+
+#buttonBox
+{
+	float:right;
+}
+
+#dailySortButton, #hourlySortButton
+{
+	float:left;
+}
+.dayButtonText
+{
+	float:right;
+}
+
+#viewButton
+{
+float:right;	
+}
+
+#viewButtonText
+{
+	float:left;
+}
+.buttonContainer
+{
+	float:right;
+	margin-top: 40px;
+	margin-right: -117px;
+}

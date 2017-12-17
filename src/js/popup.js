@@ -8,9 +8,6 @@ popupMod.config(function ($compileProvider) {
 
 popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', 
     function PopupCtrl($scope, $window, $filter, $interval) {
-  // $window.monthNames = new Array("Jan", "Feb", "Mar",
-  //       "Apr", "May", "Jun", "Jul", "Aug", "Sep",
-  //       "Oct", "Nov", "Dec");
   $scope.authButtonHandler = function () {
     if (gapi.auth.getToken() == null) {
       signin();
@@ -22,7 +19,6 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
   $scope.backupButton1Handler = function () {
     $window.monthdiff = 1;
     $scope.checker($scope.backupHelper);
-    $scope.getList();
   }
 
   $scope.backupButton2Handler = function () {
@@ -35,12 +31,15 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
     $scope.checker($scope.backupHelper);
   }
 
+  $scope.readButtonHandler = function () {
+    chrome.tabs.create({ url: chrome.runtime.getURL("../html/index.html") });
+  }
+
 
   $scope.checker = function (callback) {
     var currentTime = new Date();
-    var fileName = "UHB" +
-      currentTime.getFullYear() +
-        monthNames[currentTime.getMonth() - $window.monthdiff] + ".csv";
+    var fileName = "UHB" + currentTime.getFullYear() +
+        monthNames[currentTime.getMonth() - $window.monthdiff] + ".txt";
 
     gapi.client.drive.files.list({
       'q': "trashed = false and name = '" + fileName + "'",
@@ -49,8 +48,8 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
       var files = response.result.files;
       angular.element($('#backup-status')).css('display', 'block');
       if (files && files.length > 0) {
-        angular.element($('#backup-status')).html("Already Backuped: " + fileName);
-        angular.element($('#backup-status')).removeClass("alert-secondary alert-danger");
+        angular.element($('#backup-status')).html("Backuped: " + fileName);
+        angular.element($('#backup-status')).removeClass("alert-warning alert-danger");
         angular.element($('#backup-status')).addClass("alert alert-success");
         return true;
       } else {
@@ -59,11 +58,18 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
         }
         angular.element($('#backup-status')).html('Backuping ...');
         angular.element($('#backup-status')).removeClass("alert-danger alert-success");
-        angular.element($('#backup-status')).addClass("alert alert-secondary");
+        angular.element($('#backup-status')).addClass("alert alert-warning");
         callback();
+        var check = setInterval($scope.progressChecker, 200);
         return false;
       }
     });
+  }
+
+  $scope.progressChecker = function () {
+    if ($scope.checker()) {
+      clearInterval(check);
+    }
   }
 
   $scope.backupHelper = function () {
@@ -98,18 +104,18 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
   }
 
   $scope.saveToFolder = function (fileData, folderID, callback) {
-    const boundary = '(/= _ =)/~';
-    const delimiter = "\r\n--" + boundary + "\r\n";
-    const close_delim = "\r\n--" + boundary + "--";
+    var boundary = '-------314159265358979323846';
+    var delimiter = "\r\n--" + boundary + "\r\n";
+    var close_delim = "\r\n--" + boundary + "--";
 
     var currentTime = new Date();
     var fileName = "UHB" + currentTime.getFullYear() +
-      monthNames[currentTime.getMonth() - $window.monthdiff] + ".csv";
+      monthNames[currentTime.getMonth() - $window.monthdiff] + ".txt";
 
     var reader = new FileReader();
     reader.readAsBinaryString(fileData);
     reader.onload = function(e) {
-      var contentType = 'application/vnd.google-apps.spreadsheet';
+      var contentType = 'application/octet-stream';
       var metadata = {
         'name': fileName,
         'mimeType': contentType,
@@ -142,9 +148,6 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
         };
       }
       request.execute(callback);
-      angular.element($('#backup-status')).html("Backup OK: " + fileName);
-      angular.element($('#backup-status')).removeClass("alert-secondary alert-danger");
-      angular.element($('#backup-status')).addClass("alert alert-success");
     }
   }
 
@@ -168,14 +171,14 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
 
       // header row
       var keys = Object.keys(res[0]);
-      $scope.append(keys.join(","));
+      $scope.append(keys.join("```"));
 
       var row;
       for (var i = 0; i < res.length; i++) {
         row = "";
         for (var j = 0; j < keys.length; j++) {
-          row += JSON.stringify(res[i][keys[j]]);
-          if (j !== keys.length - 1) row += ",";
+          row += "```" + (res[i][keys[j]]) + "```";
+          if (j !== keys.length - 1) row += "|@|@";
         }
         $scope.append("\n" + row);
       }
@@ -203,53 +206,11 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
     start.setSeconds(0);
     start.setMilliseconds(0);
     var end = new Date(start.getTime());
-    end.setMonth(end.getMonth()+1);
+    end.setMonth(end.getMonth() + 1);
     arr.push(new Date(start.getTime()));
     arr.push(new Date(end.getTime()));
     return arr;
   }
-
-  // $scope.getList = function () {
-  //   gapi.client.drive.files.list({
-  //     'q': "trashed = false and name contains 'UHB'",
-  //     'fields': "nextPageToken, files(id, name)"
-  //   }).then(function (response) {
-  //     var files = response.result.files;
-  //     $scope.readFile(files[0].id);
-  //   });
-  // }
-  //
-  // $scope.readFile = function (fileID) {
-  //   gapi.client.drive.files.export({
-  //     'fileId' : fileID,
-  //     'mimeType' : 'text/csv'
-  //   }).then(function(success){
-  //     console.log(success);
-  //     var code = success.result;
-  //   }, function(fail){
-  //     console.log(fail);
-  //     console.log('Error '+ fail.result.error.message);
-  //   })
-  // }
-
-      // V2
-  // $scope.readFile = function (fileID) {
-  //   gapi.client.request({'path': '/drive/v3/files/'+fileID,'method': 'GET',callback: function ( theResponseJS, theResponseTXT ) {
-  //       var myToken = gapi.auth.getToken();
-  //       var myXHR   = new XMLHttpRequest();
-  //       myXHR.open('GET', theResponseJS.downloadUrl, true );
-  //       myXHR.setRequestHeader('Authorization', 'Bearer ' + myToken.access_token );
-  //       myXHR.onreadystatechange = function( theProgressEvent ) {
-  //         if (myXHR.readyState == 4) {
-  //           if ( myXHR.status == 200 ) {
-  //             var code = myXHR.response;
-  //           }
-  //         }
-  //       }
-  //       myXHR.send();
-  //     }
-  //   });
-  // }
 }]);
 
 var monthNames = new Array("Jan", "Feb", "Mar",
@@ -319,6 +280,8 @@ function signinStatusListener() {
     $('#backup-button1').html(monthNames[monthl]);
     $('#backup-button2').html(monthNames[monthll]);
     $('#backup-button3').html(monthNames[monthlll]);
+    $('#read-button').css('display', 'inline-block');
+    $('#read-button').addClass("btn btn-success");
     $('#signin-status').html('Authorized / Signed in.');
     $('#signin-status').removeClass("alert-warning");
     $('#signin-status').addClass("alert alert-info");
@@ -329,6 +292,7 @@ function signinStatusListener() {
     $('#auth-button').addClass("btn btn-success");
     $('#backup-label').css('display', 'none');
     $('.btn-group').css('display', 'none');
+    $('#read-button').css('display', 'none');
     $('#signin-status').html('Unauthorized / Signed out.');
     $('#signin-status').removeClass("alert-info");
     $('#signin-status').addClass("alert alert-warning");

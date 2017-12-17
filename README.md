@@ -12,12 +12,14 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 
 - Automatically backup last month history in background once authorized.
 
-- Only 1 computer's backup every month.
+- Read saved history on Goolge Drive in future (UI from [iBROWSE]).
 
-- (May read saved history on Goolge Drive in future).
+- Only 1 computer's backup every month.
 
 
 ## Log
+
+- 171216 - Can read backuped history (using iBROWSE UI)
 
 - 171215 - Select month to backup. Fix backup status bug.
 
@@ -39,3 +41,4 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 
 --------------------------------
 [webstore]:https://chrome.google.com/webstore/detail/u-history/nkokmdpokpgocgabofnpkandjgchljgf
+[iBROWSE]:https://github.com/henrilouis/ibrowse

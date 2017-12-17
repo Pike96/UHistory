@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="../style/bootstrap.min.css">
     <style>
       body {
-        min-width: 510px;
+        min-width: 550px;
         margin-bottom: 0px;
       }
       div {
@@ -15,8 +15,8 @@
         text-align: center;
       }
     </style>
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/angular.min.js"></script>
+    <script src="../js/external/jquery.min.js"></script>
+    <script src="../js/external/angular.min.js"></script>
     <script src="../js/popup.js"></script>
     <script src="https://apis.google.com/js/api.js?onload=handleClientLoad"></script>
   </head>
@@ -26,12 +26,17 @@
         <tr>
           <td><div id="backup-label" align="center" style="display: none">Backup for the month: </div></td>
           <td><div class="btn-group" role="group" aria-label="Basic example" style="display: none">
-            <button type="button" ng-click="backupButton1Handler()" id="backup-button1" class="btn btn-primary">Left</button>
-            <button type="button" ng-click="backupButton2Handler()" id="backup-button2" class="btn btn-primary">Middle</button>
-            <button type="button" ng-click="backupButton3Handler()" id="backup-button3" class="btn btn-primary" style="margin-right: 20px">Right</button>
+            <button type="button" ng-click="backupButton1Handler()"
+                    id="backup-button1" class="btn btn-primary">Left</button>
+            <button type="button" ng-click="backupButton2Handler()"
+                    id="backup-button2" class="btn btn-primary">Middle</button>
+            <button type="button" ng-click="backupButton3Handler()"
+                    id="backup-button3" class="btn btn-primary" style="margin-right: 20px">Right</button>
           </div></td>
+          <td><button type="button" ng-click="readButtonHandler()"
+                      id="read-button" style="display: none; margin-top: 20px; margin-right: 20px">Read</button></td>
           <td><button type="button" ng-click="authButtonHandler()" 
-            id="auth-button" style="display: none; margin-top: 20px">Authorize / Sign In</button>
+                      id="auth-button" style="display: none; margin-top: 20px">Authorize / Sign In</button>
           </td>
         </tr>
       </table>

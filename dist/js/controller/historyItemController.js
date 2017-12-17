@@ -1,0 +1,1 @@
+var HistoryItemController=function(r,e){r.removeButton.click(function(){chrome.history.deleteUrl({url:r.url},function(){e.removeUrl(r.url),$(r.container).slideUp(300,"easeInQuart")})})};

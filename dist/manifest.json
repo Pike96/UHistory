@@ -4,9 +4,10 @@
   "short_name": "UHistory",
   "author": "Pike96",
   "description": "U History - Backup Chrome History to Your Google Drive",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "permissions": [
     "history",
+    "chrome://favicon/",
     "activeTab",
     "tabs",
     "identity",

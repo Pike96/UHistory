@@ -1,0 +1,1 @@
+var CalendarView=function(e,a){var n=$("<div id='cal'>"),d=new MonthCalendarView(n,a),l=(new MonthCalendarController(d,a),$("<div id='weekcal'>")),r=new WeekCalendarView(l,a),i=(new WeekCalendarController(r,a),$("<div id='daycal'>")),w=new DayCalendarView(i,a);new DayCalendarController(w,a);e.append(n),e.append(l),e.append(i)};

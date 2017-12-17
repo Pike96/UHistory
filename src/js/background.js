@@ -10,12 +10,8 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
   $scope.monthNames = new Array("Jan", "Feb", "Mar",
     "Apr", "May", "Jun", "Jul", "Aug", "Sep",
     "Oct", "Nov", "Dec");
-  $scope.firstAuth = $interval(function () {
-    $scope.refreshToken()
-  }, 1000, 1);
-  $scope.autoAuth = $interval(function () {
-    $scope.refreshToken()
-  }, 1800000);// 30 min
+  $scope.firstAuth = $interval(function () {$scope.refreshToken()}, 1000, 1);
+  $scope.autoAuth = $interval(function () {$scope.refreshToken()}, 1800000);// 30 min
 
   $scope.refreshToken = function () {
     if (typeof gapi === 'undefined') {
@@ -42,9 +38,8 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
       return;
     }
     var currentTime = new Date();
-    var fileName = "UHB" +
-      currentTime.getFullYear() +
-        $scope.monthNames[currentTime.getMonth() - 1] + ".csv";
+    var fileName = "UHB" + currentTime.getFullYear() +
+        $scope.monthNames[currentTime.getMonth() - 1] + ".txt";
 
     gapi.client.drive.files.list({
       'q': "trashed = false and name = '" + fileName + "'",
@@ -103,12 +98,12 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
 
     var currentTime = new Date();
     var fileName = "UHB" + currentTime.getFullYear() +
-      $scope.monthNames[currentTime.getMonth() - 1] + ".csv";
+      $scope.monthNames[currentTime.getMonth() - 1] + ".txt";
 
     var reader = new FileReader();
     reader.readAsBinaryString(fileData);
     reader.onload = function(e) {
-      var contentType = 'application/vnd.google-apps.spreadsheet';
+      var contentType = 'application/octet-stream';
       var metadata = {
         'name': fileName,
         'mimeType': contentType,
@@ -154,22 +149,25 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
       'endTime': timeStartEnd[1].getTime()
     }, function (res) {
       $window.res = res;
+      if (res.length == 0) {
+        return;
+      }
 
       // header row
       var keys = Object.keys(res[0]);
-      $scope.append(keys.join(","));
+      $scope.append(keys.join("```"));
 
       var row;
       for (var i = 0; i < res.length; i++) {
         row = "";
         for (var j = 0; j < keys.length; j++) {
-          row += JSON.stringify(res[i][keys[j]]);
-          if (j !== keys.length - 1) row += ",";
+          row += "```" + (res[i][keys[j]]) + "```";
+          if (j !== keys.length - 1) row += "|@|@";
         }
         $scope.append("\n" + row);
       }
 
-      var blob = new Blob([data.innerText], {type: 'application/octet-stream'});
+      var blob = new Blob([data.innerText], {type: 'application/octet-steam'});
       callback(blob, folderID);
     });
   }
@@ -192,7 +190,7 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
     start.setSeconds(0);
     start.setMilliseconds(0);
     var end = new Date(start.getTime());
-    end.setMonth(end.getMonth()+1);
+    end.setMonth(end.getMonth() + 1);
     arr.push(new Date(start.getTime()));
     arr.push(new Date(end.getTime()));
     return arr;

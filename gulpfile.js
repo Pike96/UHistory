@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var pkg = require('./package.json');
 
+var fontmin = require('gulp-fontmin');
 var htmlmin = require('gulp-htmlmin');
 var imagemin = require('gulp-imagemin');
 var plumber = require('gulp-plumber');
@@ -10,6 +11,17 @@ var cleanCSS = require('gulp-clean-css');
 var zip = require('gulp-zip');
 var del = require('del');
 var gulpSequence = require('gulp-sequence');
+
+gulp.task('font', function() {
+  gulp.src('./src/**/*.ttf')
+    .pipe(gulp.dest('./dist'));
+  gulp.src('./src/**/*.eot')
+    .pipe(gulp.dest('./dist'));
+  gulp.src('./src/**/*.svg')
+    .pipe(gulp.dest('./dist'));
+  gulp.src('./src/**/*.woff')
+    .pipe(gulp.dest('./dist'));
+});
 
 gulp.task('json', function() {
   gulp.src('./src/**/*.json')
@@ -54,7 +66,7 @@ gulp.task('clean', function(callback) {
 });
 
 gulp.task('build', gulpSequence(
-  'clean', ['json', 'html', 'img', 'js', 'css']));
+  'clean', ['font', 'json', 'html', 'img', 'js', 'css']));
 
 gulp.task('watch', function() {
   gulp.watch('./src/**/*.html', ['html']);
