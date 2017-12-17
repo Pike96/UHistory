@@ -110,7 +110,7 @@ var IbrowseModel = function() {
       callback: function (resp, raw_resp) {
         var resData = JSON.parse(raw_resp).gapiRequest.data.body;
         var subHistory = resData.substring(resData.indexOf("\n") + 1);
-        subHistory = $.csv.toArrays(subHistory, {separator: '|@|@', delimiter:'```'});
+        subHistory = $.csv.toArrays(subHistory, {separator: '|@|@', delimiter:'`|`|'});
         historyAdd(subHistory);
         if (callback) {
           callback(files, i + 1);

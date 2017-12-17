@@ -155,13 +155,13 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
 
       // header row
       var keys = Object.keys(res[0]);
-      $scope.append(keys.join("```"));
+      $scope.append(keys.join("`|`|"));
 
       var row;
       for (var i = 0; i < res.length; i++) {
         row = "";
         for (var j = 0; j < keys.length; j++) {
-          row += "```" + (res[i][keys[j]]) + "```";
+          row += "`|`|" + (res[i][keys[j]]) + "`|`|";
           if (j !== keys.length - 1) row += "|@|@";
         }
         $scope.append("\n" + row);
