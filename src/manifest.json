@@ -3,7 +3,7 @@
   "name": "U History",
   "short_name": "UHistory",
   "author": "Pike96",
-  "description": "U History - Backup Chrome History to Your Google Drive",
+  "description": "Save & Read Chrome History on Your Google Drive",
   "version": "0.3.0",
   "permissions": [
     "history",
