@@ -19,7 +19,7 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 
 ## Log
 
-- 171231 - Fix problem of month with 31 days
+- 171231 - Fix problem of month with 31 days. Remove 90 days restriction in reading
 
 - 171216 - Can read backuped history (using iBROWSE UI)
 
