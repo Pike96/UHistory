@@ -38,6 +38,7 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
 
   $scope.checker = function (callback) {
     var currentTime = new Date();
+    currentTime.setDate(1);
     var fileName = "UHB" + currentTime.getFullYear() +
         monthNames[currentTime.getMonth() - $window.monthdiff] + ".txt";
 
@@ -109,6 +110,7 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
     var close_delim = "\r\n--" + boundary + "--";
 
     var currentTime = new Date();
+    currentTime.setDate(1);
     var fileName = "UHB" + currentTime.getFullYear() +
       monthNames[currentTime.getMonth() - $window.monthdiff] + ".txt";
 
@@ -199,8 +201,8 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
   $scope.getLastMonthPeriod = function (time) {
     var arr = [];
     var start =  new Date(time.getTime());
-    start.setMonth(start.getMonth() - $window.monthdiff);
     start.setDate(1);
+    start.setMonth(start.getMonth() - $window.monthdiff);
     start.setHours(0);
     start.setMinutes(0);
     start.setSeconds(0);
@@ -264,6 +266,7 @@ function signout() {
 
 function signinStatusListener() {
   var time = new Date();
+  time.setDate(1);
   time.setMonth(time.getMonth() - 1);
   var monthl = time.getMonth();
   time.setMonth(monthl - 1);

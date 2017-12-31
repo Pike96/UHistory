@@ -4,7 +4,7 @@
   "short_name": "UHistory",
   "author": "Pike96",
   "description": "Save & Read Chrome History on Your Google Drive",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "permissions": [
     "history",
     "chrome://favicon/",

@@ -38,6 +38,7 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
       return;
     }
     var currentTime = new Date();
+    currentTime.setDate(1);
     var fileName = "UHB" + currentTime.getFullYear() +
         $scope.monthNames[currentTime.getMonth() - 1] + ".txt";
 
@@ -97,6 +98,7 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
     const close_delim = "\r\n--" + boundary + "--";
 
     var currentTime = new Date();
+    currentTime.setDate(1);
     var fileName = "UHB" + currentTime.getFullYear() +
       $scope.monthNames[currentTime.getMonth() - 1] + ".txt";
 
@@ -183,8 +185,8 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
   $scope.getLastMonthPeriod = function (time) {
     var arr = [];
     var start =  new Date(time.getTime());
-    start.setMonth(start.getMonth() - 1);
     start.setDate(1);
+    start.setMonth(start.getMonth() - 1);
     start.setHours(0);
     start.setMinutes(0);
     start.setSeconds(0);
