@@ -16,6 +16,11 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 
 - Only 1 PC backup every month. Sign out on unwanted PCs.
 
+### WARNINGS
+
+- Don't search "\`|\`|" or "|@|@" on your chrome! Please delete corresponding local history items and the backup in your drive then manually backup again if you did.
+
+- Please close the popup every time the backup is done to make sure that backup succeeds.
 
 ## Log
 
