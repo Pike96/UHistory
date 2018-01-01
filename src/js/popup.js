@@ -39,8 +39,9 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
   $scope.checker = function (callback) {
     var currentTime = new Date();
     currentTime.setDate(1);
+    currentTime.setMonth(currentTime.getMonth() - $window.monthdiff);
     var fileName = "UHB" + currentTime.getFullYear() +
-        monthNames[currentTime.getMonth() - $window.monthdiff] + ".txt";
+        monthNames[currentTime.getMonth()] + ".txt";
 
     gapi.client.drive.files.list({
       'q': "trashed = false and name = '" + fileName + "'",
@@ -111,8 +112,9 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
 
     var currentTime = new Date();
     currentTime.setDate(1);
+    currentTime.setMonth(currentTime.getMonth() - $window.monthdiff);
     var fileName = "UHB" + currentTime.getFullYear() +
-      monthNames[currentTime.getMonth() - $window.monthdiff] + ".txt";
+      monthNames[currentTime.getMonth()] + ".txt";
 
     var reader = new FileReader();
     reader.readAsBinaryString(fileData);

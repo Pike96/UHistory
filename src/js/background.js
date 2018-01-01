@@ -39,8 +39,9 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
     }
     var currentTime = new Date();
     currentTime.setDate(1);
+    currentTime.setMonth(currentTime.getMonth() - 1);
     var fileName = "UHB" + currentTime.getFullYear() +
-        $scope.monthNames[currentTime.getMonth() - 1] + ".txt";
+        $scope.monthNames[currentTime.getMonth()] + ".txt";
 
     gapi.client.drive.files.list({
       'q': "trashed = false and name = '" + fileName + "'",
@@ -99,8 +100,9 @@ bgMod.controller('BgCtrl', ['$scope', '$window', '$filter', '$interval', functio
 
     var currentTime = new Date();
     currentTime.setDate(1);
+    currentTime.setMonth(currentTime.getMonth() - 1);
     var fileName = "UHB" + currentTime.getFullYear() +
-      $scope.monthNames[currentTime.getMonth() - 1] + ".txt";
+      $scope.monthNames[currentTime.getMonth()] + ".txt";
 
     var reader = new FileReader();
     reader.readAsBinaryString(fileData);
