@@ -1,8 +1,10 @@
-# U History (Chrome Extension)
+# U History v0.3.3 (Chrome Extension)
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FPike96%2FUHistory.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FPike96%2FUHistory?ref=badge_shield)
 
 ![tile1400](https://github.com/Pike96/UHistory/raw/master/pic/tile1400.png) [![](/pic/chrome-web-store.png "U History - Chrome Web Store")][webstore] <-- Click to get it
+
+Local zipped version: [UHistory-0.3.3.zip] (大陆用户不能科学上网的可以下载这个本地版本)
 
 U means Unlimited! Chrome only saves 90 days of history. Use this extension and save your history on Google Drive forever!
 
@@ -51,3 +53,4 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 --------------------------------
 [webstore]:https://chrome.google.com/webstore/detail/u-history/nkokmdpokpgocgabofnpkandjgchljgf
 [iBROWSE]:https://github.com/henrilouis/ibrowse
+[UHistory-0.3.3.zip]:https://github.com/Pike96/UHistory/blob/master/release/UHistory-0.3.3.zip
