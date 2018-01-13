@@ -110,8 +110,14 @@ var IbrowseModel = function() {
       callback: function (resp, raw_resp) {
         var resData = JSON.parse(raw_resp).gapiRequest.data.body;
         var subHistory = resData.substring(resData.indexOf("\n") + 1);
-        subHistory = $.csv.toArrays(subHistory, {separator: '|@|@', delimiter:'`|`|'});
-        historyAdd(subHistory);
+        try {
+          subHistory = $.csv.toArrays(subHistory, {separator: '|@|@', delimiter:'`|`|'});
+          historyAdd(subHistory);
+				}
+        catch(err) {
+        	window.alert("Something wrong in " + files[i].name
+						+ ". Please delete it and read the WARNINGS on Github page");
+				}
         if (callback) {
           callback(files, i + 1);
         }

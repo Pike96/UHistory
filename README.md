@@ -14,7 +14,7 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 
 - Read saved history on Goolge Drive (UI from [iBROWSE]).
 
-- Only 1 PC backup every month. Sign out on unwanted PCs.
+- Only 1 PC backup every month. Use custom filename on other PCs. Sign out on unwanted PCs.
 
 ### WARNINGS
 
@@ -23,6 +23,8 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 - Please close the popup every time the backup is done to make sure that backup succeeds.
 
 ## Log
+
+- 180113 - Add custom filename. Catch error of invalid file when reading
 
 - 180101 - Fix incorrect filename
 

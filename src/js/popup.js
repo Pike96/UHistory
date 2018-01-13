@@ -8,6 +8,29 @@ popupMod.config(function ($compileProvider) {
 
 popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval', 
     function PopupCtrl($scope, $window, $filter, $interval) {
+  $scope.setFileName = function () {
+    if ($scope.checkboxModel) {
+      $scope.fileName = "UHB" + $scope.text + ".txt";
+      return;
+    }
+    var currentTime = new Date();
+    currentTime.setDate(1);
+    currentTime.setMonth(currentTime.getMonth() - $window.monthdiff);
+    $scope.fileName = "UHB" + currentTime.getFullYear() +
+      monthNames[currentTime.getMonth()] + ".txt";
+  };
+
+  $scope.checkboxModel = false;
+  $scope.text = '';
+  $scope.checkboxHandler = function () {
+    if ($scope.checkboxModel) {
+      angular.element($('#text-input')).removeAttr("disabled");
+    }
+    else {
+      angular.element($('#text-input')).attr("disabled", "disabled");
+    }
+  };
+
   $scope.authButtonHandler = function () {
     if (gapi.auth.getToken() == null) {
       signin();
@@ -18,16 +41,19 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
 
   $scope.backupButton1Handler = function () {
     $window.monthdiff = 1;
+    $scope.setFileName();
     $scope.checker($scope.backupHelper);
   };
 
   $scope.backupButton2Handler = function () {
     $window.monthdiff = 2;
+    $scope.setFileName();
     $scope.checker($scope.backupHelper);
   };
 
   $scope.backupButton3Handler = function () {
     $window.monthdiff = 3;
+    $scope.setFileName();
     $scope.checker($scope.backupHelper);
   };
 
@@ -37,20 +63,14 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
 
 
   $scope.checker = function (callback) {
-    var currentTime = new Date();
-    currentTime.setDate(1);
-    currentTime.setMonth(currentTime.getMonth() - $window.monthdiff);
-    var fileName = "UHB" + currentTime.getFullYear() +
-        monthNames[currentTime.getMonth()] + ".txt";
-
     gapi.client.drive.files.list({
-      'q': "trashed = false and name = '" + fileName + "'",
+      'q': "trashed = false and name = '" + $scope.fileName + "'",
       'fields': "nextPageToken, files(id, name)"
     }).then(function (response) {
       var files = response.result.files;
       angular.element($('#backup-status')).css('display', 'block');
       if (files && files.length > 0) {
-        angular.element($('#backup-status')).html("Backuped: " + fileName);
+        angular.element($('#backup-status')).html("Backuped: " + $scope.fileName);
         angular.element($('#backup-status')).removeClass("alert-warning alert-danger");
         angular.element($('#backup-status')).addClass("alert alert-success");
         return true;
@@ -106,22 +126,18 @@ popupMod.controller('PopupCtrl', ['$scope', '$window', '$filter', '$interval',
   };
 
   $scope.saveToFolder = function (fileData, folderID, callback) {
+    $scope.setFileName();
+
     var boundary = '-------314159265358979323846';
     var delimiter = "\r\n--" + boundary + "\r\n";
     var close_delim = "\r\n--" + boundary + "--";
-
-    var currentTime = new Date();
-    currentTime.setDate(1);
-    currentTime.setMonth(currentTime.getMonth() - $window.monthdiff);
-    var fileName = "UHB" + currentTime.getFullYear() +
-      monthNames[currentTime.getMonth()] + ".txt";
 
     var reader = new FileReader();
     reader.readAsBinaryString(fileData);
     reader.onload = function(e) {
       var contentType = 'application/octet-stream';
       var metadata = {
-        'name': fileName,
+        'name': $scope.fileName,
         'mimeType': contentType,
         'parents': [folderID]
       };
@@ -281,6 +297,7 @@ function signinStatusListener() {
     $('#auth-button').css('margin-top', '30px');
     $('#auth-button').removeClass("btn-success");
     $('#auth-button').addClass("btn btn-danger");
+    $('#name-form').css('display', 'inline-block');
     $('#backup-label').css('display', 'inline-block');
     $('.btn-group').css('display', 'inline-block');
     $('#backup-button1').html(monthNames[monthl]);
@@ -297,6 +314,7 @@ function signinStatusListener() {
     $('#auth-button').css('margin-top', '10px');
     $('#auth-button').removeClass("btn-danger");
     $('#auth-button').addClass("btn btn-success");
+    $('#name-form').css('display', 'none');
     $('#backup-label').css('display', 'none');
     $('.btn-group').css('display', 'none');
     $('#read-button').css('display', 'none');

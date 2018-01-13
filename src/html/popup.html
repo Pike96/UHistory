@@ -22,6 +22,13 @@
   </head>
   <body ng-app="UHistoryPopup" ng-csp="" style="text-align: center">
     <div ng-controller="PopupCtrl" id="content" align="center">
+      <form id="name-form">
+        <input type="checkbox" ng-model="checkboxModel" ng-change="checkboxHandler()">
+        Custom filename: UHB
+        <input id="text-input" type="text" name="input" ng-model="text"
+               disabled required ng-trim="false" placeholder="2017Dec">
+        .txt
+      </form>
       <table align="center" style="width:90%">
         <tr>
           <td><div id="backup-label" align="center" style="display: none">
