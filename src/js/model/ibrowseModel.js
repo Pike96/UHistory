@@ -71,6 +71,9 @@ var IbrowseModel = function() {
           'fields': "nextPageToken, files(id, name)"
         }).then(function (response) {
           var files = response.result.files;
+          if (files === undefined || files.length == 0) {
+            window.alert("No backup in Google Drive. Please backup first!");
+					}
           var i = 0;
           loop(files, i);
         });

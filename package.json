@@ -1,6 +1,6 @@
 {
   "name": "UHistory",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Save & Read Chrome History on Your Google Drive",
   "main": "gulpfile.js",
   "keywords": [

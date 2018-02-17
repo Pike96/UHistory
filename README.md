@@ -24,6 +24,8 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 
 ## Log
 
+- 180216 - Fix no file bug.
+
 - 180113 - Add custom filename. Catch error of invalid file when reading
 
 - 180101 - Fix incorrect filename
