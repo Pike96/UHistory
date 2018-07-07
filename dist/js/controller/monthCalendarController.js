@@ -1,1 +1,0 @@
-var MonthCalendarController=function(n,t){n.nextButton.click(function(){n.cal.next()}),n.previousButton.click(function(){n.cal.previous()})};

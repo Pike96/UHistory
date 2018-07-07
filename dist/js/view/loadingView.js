@@ -1,1 +1,0 @@
-var LoadingView=function(a,d){var i=$("<h2 id='loadingTitle'>LOADING HISTORY</h2>"),n=$("<div id='loadingContainer'>");n.append(i),a.append(n),d.addObserver(this),this.update=function(d){"dataReady"==d&&a.fadeOut(1200)}};

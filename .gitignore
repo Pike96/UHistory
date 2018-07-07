@@ -5,3 +5,8 @@
 .DS_Store
 .tmp
 node_modules
+.idea
+package-lock.json
+dist
+release
+

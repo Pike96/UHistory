@@ -1,1 +1,0 @@
-$(function(){var e=new IbrowseModel,n=new LoadingView($("#loading"),e),r=(new LoadingController(n,e),new CalendarView($("#calendar"),e)),o=(new CalendarController(r,e),new SearchBarView($("#search"),e)),a=(new SearchBarController(o,e),new HistoryView($("#history"),e)),i=(new HistoryController(a,e),new StatisticsView($("#statistics"),e));new StatisticsController(i,e)});

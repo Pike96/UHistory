@@ -1,1 +1,0 @@
-var BarGraphController=function(r,a){};

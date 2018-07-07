@@ -1,1 +1,0 @@
-var LoadingController=function(n,o){};

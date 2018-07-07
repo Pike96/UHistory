@@ -1,1 +1,0 @@
-var CalendarController=function(n,r){};

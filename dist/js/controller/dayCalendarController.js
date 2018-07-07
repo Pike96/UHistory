@@ -1,1 +1,0 @@
-var DayCalendarController=function(n,t){n.nextButton.click(function(){n.cal.next(1)}),n.previousButton.click(function(){n.cal.previous(1)})};
