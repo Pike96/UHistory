@@ -1,12 +1,4 @@
-*.ini
-*.sublime-project
-*.sublime-workspace
-
-.DS_Store
-.tmp
-node_modules
-.idea
-package-lock.json
-dist
-release
-
+npm-debug.log
+node_modules/
+dist/
+tmp/

@@ -1,35 +1,40 @@
 {
   "name": "UHistory",
-  "version": "0.3.5",
+  "version": "1.0.0",
   "description": "Save & Read Chrome History on Your Google Drive",
-  "main": "gulpfile.js",
-  "keywords": [
-    "history",
-    "google",
-    "drive",
-    "chrome",
-    "extension"
-  ],
-  "author": "Pike96",
-  "license": "MIT",
-  "devDependencies": {
-    "del": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-batch": "^1.0.5",
-    "gulp-clean-css": "^3.9.0",
-    "gulp-fontmin": "^0.7.4",
-    "gulp-htmlmin": "^3.0.0",
-    "gulp-imagemin": "^4.0.0",
-    "gulp-livereload": "^3.8.1",
-    "gulp-load-plugins": "^1.2.0",
-    "gulp-minify-html": "^1.0.6",
-    "gulp-ng-annotate": "^2.0.0",
-    "gulp-plumber": "^1.1.0",
-    "gulp-sequence": "^0.4.6",
-    "gulp-uglify-es": "^0.1.8",
-    "gulp-zip": "^4.0.0"
-  },
+  "main": "index.js",
   "scripts": {
-    "install": ""
+    "watch": "webpack --config webpack/webpack.dev.js --watch",
+    "build": "webpack --config webpack/webpack.prod.js",
+    "clean": "rimraf dist",
+    "test": "npx jest",
+    "style": "prettier --write \"src/**/*.{ts,tsx}\""
+  },
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chibat/chrome-extension-typescript-starter.git"
+  },
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "devDependencies": {
+    "@types/chrome": "0.0.158",
+    "@types/jest": "^27.0.2",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "copy-webpack-plugin": "^9.0.1",
+    "glob": "^7.1.6",
+    "jest": "^27.2.1",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2 ",
+    "ts-jest": "^27.0.5",
+    "ts-loader": "^8.0.0",
+    "typescript": "^4.4.3 ",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^4.0.0",
+    "webpack-merge": "^5.0.0"
   }
 }
