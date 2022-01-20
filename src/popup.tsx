@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
+import { authTest } from "./auth";
+
 const Popup = () => {
   const [count, setCount] = useState(0);
   const [currentURL, setCurrentURL] = useState<string>();
@@ -13,6 +15,13 @@ const Popup = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       setCurrentURL(tabs[0].url);
     });
+
+    if (document.readyState === 'complete') {
+      authTest();
+    }
+    else {
+      document.addEventListener('readystatechange', authTest);
+    }
   }, []);
 
   const changeBackground = () => {
