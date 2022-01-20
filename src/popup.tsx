@@ -1,60 +1,32 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
-import { authTest } from "./auth";
+import CloudIcon from "@mui/icons-material/Cloud";
+import Grid from "@mui/material/Grid";
+import LoadingButton from "@mui/lab/LoadingButton";
+
+import { auth } from "./authUtils";
+import AuthView from "./AuthView";
+import BackupView from "./BackupView";
 
 const Popup = () => {
-  const [count, setCount] = useState(0);
-  const [currentURL, setCurrentURL] = useState<string>();
-
-  useEffect(() => {
-    chrome.action.setBadgeText({ text: count.toString() });
-  }, [count]);
-
-  useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      setCurrentURL(tabs[0].url);
-    });
-
-    if (document.readyState === 'complete') {
-      authTest();
-    }
-    else {
-      document.addEventListener('readystatechange', authTest);
-    }
-  }, []);
-
-  const changeBackground = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const tab = tabs[0];
-      if (tab.id) {
-        chrome.tabs.sendMessage(
-          tab.id,
-          {
-            color: "#555555",
-          },
-          (msg) => {
-            console.log("result message:", msg);
-          }
-        );
-      }
-    });
-  };
+  const [authDone, setAuthDone] = useState(false);
 
   return (
-    <>
-      <ul style={{ minWidth: "700px" }}>
-        <li>Current URL: {currentURL}</li>
-        <li>Current Time: {new Date().toLocaleTimeString()}</li>
-      </ul>
-      <button
-        onClick={() => setCount(count + 1)}
-        style={{ marginRight: "5px" }}
-      >
-        count up
-      </button>
-      <button onClick={changeBackground}>change background</button>
-    </>
+    <Grid
+      container
+      direction="column"
+      justifyContent="center"
+      alignItems="center"
+      width={430}
+      minHeight={100}
+    >
+      {authDone ? (
+        <BackupView setAuthDone={setAuthDone} />
+      ) : (
+        <AuthView setAuthDone={setAuthDone} />
+      )}
+    </Grid>
   );
 };
 

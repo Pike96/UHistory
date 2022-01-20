@@ -33,6 +33,8 @@
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0xFojquNN5fsSpQzbgv7bIKIvurUZxZ8uE3HDJlrrA+hXbvqp/nKVYEUkL5PbWt0Ct+SlBc3lpMMbLxQAII8L/QFAPK7bwznN5ic+9uha9qi6vDjB6t7lwuHBRwgZY4O9k9TnDFQjD2tlJoyR/IEOX7SLKpd7cQb8ZwSmba1xd2Kb1wmv1KF+e2uy9EPbSP8jgrRvRI229cCTJmH88iCumy63jtBv4W7tSIfc4xSUbL8nD6W/Kho4SHZ23etAtM4lPsS/6Tcsyr6B7hU8LijCC//mIJsq3QKNoQJnCHQ116Wrwd0VYGP5vISrDLfBu0zfxDzvOKkwXU/ir6sNxhUrwIDAQAB",
 
   "host_permissions": [
+    "https://accounts.google.com/*",
+    "https://www.googleapis.com/*",
     "<all_urls>"
   ]
 }
