@@ -1,32 +1,36 @@
-import React, { FunctionComponent, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { FC, useState } from 'react';
+import ReactDOM from 'react-dom';
 
-import CloudIcon from "@mui/icons-material/Cloud";
-import Grid from "@mui/material/Grid";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { Grid } from '@mui/material';
+import CloudIcon from '@mui/icons-material/Cloud';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import { auth } from "./authUtils";
+import { signOut } from './authUtils';
+import { BackupViewProps } from './interfaces';
 
-const BackupView: FunctionComponent<{ setAuthDone: Function }> = ({
-  setAuthDone,
-}) => {
+const BackupView: FC<BackupViewProps> = ({ setAuthDone, notify }) => {
   const [loading, setLoading] = useState(false);
 
-  const handleAuthClick = async () => {
-    await auth({ interactive: true });
-    setAuthDone(true);
+  const handleSignOutClick = async (): Promise<void> => {
+    setLoading(true);
+
+    await signOut();
+
+    setLoading(false);
   };
 
   return (
-    <LoadingButton
-      startIcon={<CloudIcon />}
-      loading={loading}
-      loadingPosition="start"
-      onClick={handleAuthClick}
-      variant="contained"
-    >
-      Sign In To Your Google Drive 2
-    </LoadingButton>
+    <Grid item xs={12}>
+      <LoadingButton
+        startIcon={<CloudIcon />}
+        loading={loading}
+        loadingPosition="start"
+        onClick={handleSignOutClick}
+        variant="contained"
+      >
+        Sign In To Your Google Drive
+      </LoadingButton>
+    </Grid>
   );
 };
 

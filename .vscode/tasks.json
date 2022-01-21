@@ -28,6 +28,11 @@
             "group": "build",
             "command": "npm",
             "args": ["run", "watch"]
+        },
+        {
+            "taskName": "watch",
+            "command": "npm",
+            "args": ["run", "watch"],
         }
     ]
 }

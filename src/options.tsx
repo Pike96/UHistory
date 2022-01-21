@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 
 const Options = () => {
-  const [color, setColor] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
+  const [color, setColor] = useState<string>('');
+  const [status, setStatus] = useState<string>('');
   const [like, setLike] = useState<boolean>(false);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const Options = () => {
     // stored in chrome.storage.
     chrome.storage.sync.get(
       {
-        favoriteColor: "red",
+        favoriteColor: 'red',
         likesColor: true,
       },
       (items) => {
@@ -30,9 +30,9 @@ const Options = () => {
       },
       () => {
         // Update status to let user know options were saved.
-        setStatus("Options saved.");
+        setStatus('Options saved.');
         const id = setTimeout(() => {
-          setStatus("");
+          setStatus('');
         }, 1000);
         return () => clearTimeout(id);
       }
@@ -42,7 +42,7 @@ const Options = () => {
   return (
     <>
       <div>
-        Favorite color:{" "}
+        Favorite color:{' '}
         <select
           value={color}
           onChange={(event) => setColor(event.target.value)}
@@ -73,5 +73,5 @@ ReactDOM.render(
   <React.StrictMode>
     <Options />
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById('root')
 );

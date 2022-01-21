@@ -1,39 +1,43 @@
-import React, { FunctionComponent, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { FC, useState } from 'react';
+import ReactDOM from 'react-dom';
 
-import CloudIcon from "@mui/icons-material/Cloud";
-import Grid from "@mui/material/Grid";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { Grid } from '@mui/material';
+import CloudIcon from '@mui/icons-material/Cloud';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import { auth } from "./authUtils";
+import { auth } from './authUtils';
+import { AuthViewProps } from './interfaces';
 
-const AuthView: FunctionComponent<{ setAuthDone: Function }> = ({
-  setAuthDone,
-}) => {
+const AuthView: FC<AuthViewProps> = ({ setAuthDone, notify }) => {
   const [loading, setLoading] = useState(false);
 
-  const handleAuthClick = async () => {
+  const handleAuthClick = async (): Promise<void> => {
     setLoading(true);
-    const token = await auth({ interactive: true });
-    if (token) {
+
+    if (await auth({ interactive: true })) {
       setAuthDone(true);
+    } else {
+      notify({
+        message: "Can't sign in to your Google Drive. Please try again later.",
+        severity: 'error',
+      });
     }
-    else {
-      // notification: Can't sign in to your Google Drive. Please try again later.
-    }
+
     setLoading(false);
   };
 
   return (
-    <LoadingButton
-      startIcon={<CloudIcon />}
-      loading={loading}
-      loadingPosition="start"
-      onClick={handleAuthClick}
-      variant="contained"
-    >
-      Sign In To Your Google Drive
-    </LoadingButton>
+    <Grid item xs={12}>
+      <LoadingButton
+        startIcon={<CloudIcon />}
+        loading={loading}
+        loadingPosition="start"
+        onClick={handleAuthClick}
+        variant="contained"
+      >
+        Sign In To Your Google Drive
+      </LoadingButton>
+    </Grid>
   );
 };
 
