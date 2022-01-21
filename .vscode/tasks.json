@@ -5,34 +5,26 @@
     "command": "npm",
     "tasks": [
         {
-            "label": "install",
-            "type": "shell",
-            "command": "npm",
-            "args": ["install"]
+            "type": "npm",
+            "script": "style",
+            "problemMatcher": [],
+            "label": "style",
+            "detail": "prettier --write \"src/**/*.{ts,tsx}\""
         },
         {
-            "label": "update",
-            "type": "shell",
-            "command": "npm",
-            "args": ["update"]
-        },
-        {
-            "label": "test",
-            "type": "shell",
-            "command": "npm",
-            "args": ["run", "test"]
-        },
-        {
-            "label": "build",
-            "type": "shell",
+            "type": "npm",
+            "script": "watch",
             "group": "build",
-            "command": "npm",
-            "args": ["run", "watch"]
+            "problemMatcher": [],
+            "label": "watch",
+            "detail": "webpack --config webpack/webpack.dev.js --watch"
         },
         {
-            "taskName": "watch",
-            "command": "npm",
-            "args": ["run", "watch"],
+            "type": "npm",
+            "script": "install",
+            "problemMatcher": [],
+            "label": "npm: install",
+            "detail": "install dependencies from package"
         }
     ]
 }
