@@ -1,18 +1,26 @@
 import { AlertColor } from '@mui/material';
 
-export interface NotificationProps {
+export interface AuthOption {
+  interactive: boolean;
+}
+
+export interface NotificationData {
   message: string;
   severity: AlertColor;
-  open: boolean,
-  setOpen: Function;
+}
+
+export interface NotificationProps extends NotificationData {
+  open: boolean;
+  setOpen(state: boolean): void;
 }
 
 export interface AuthViewProps {
-  setAuthDone: Function;
-  notify: Function;
+  notify(notification: NotificationData): void;
+  setToken(state: string): void;
 }
 
 export interface BackupViewProps {
-  setAuthDone: Function;
-  notify: Function;
+  notify(notification: NotificationData): void;
+  token: string;
+  setToken(state: string): void;
 }

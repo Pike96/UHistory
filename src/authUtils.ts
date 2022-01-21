@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { getLocalBrowserStorage, setLocalBrowserStorage } from './browserUtils';
-
-interface AuthOption {
-  interactive: boolean;
-}
+import {
+  getLocalBrowserStorage,
+  setLocalBrowserStorage,
+  removeCachedAuthToken,
+} from './browserUtils';
+import { AuthOption } from './interfaces';
 
 export async function authTest() {
   const token: string | null = await auth({ interactive: true });
@@ -28,25 +29,25 @@ export async function authTest() {
   });
 }
 
-export function auth(option: AuthOption): Promise<string | null> {
-  return new Promise<string | null>((resolve) => {
+export function auth(option: AuthOption): Promise<string> {
+  return new Promise<string>((resolve) => {
     try {
       chrome.identity.getAuthToken(option, async function (token: string) {
         await setLocalBrowserStorage({ accessToken: token });
         resolve(token);
       });
     } catch (e) {
-      resolve(null);
+      resolve('');
     }
   });
 }
 
-export async function signOut() {
-  const token = await getLocalBrowserStorage(['accessToken']);
-}
-
 export async function signOutForToken(token: string): Promise<void> {
-  await axios.get(`https://accounts.google.com/o/oauth2/revoke?token=${token}`);
-  await setLocalBrowserStorage({ accessToken: null });
-  chrome.identity.removeCachedAuthToken({ token });
+  try {
+    await Promise.all([
+      token && axios.get(`https://accounts.google.com/o/oauth2/revoke?token=${token}`),
+      token && removeCachedAuthToken(token),
+      setLocalBrowserStorage({ accessToken: '' }),
+    ]);
+  } catch (e) {}
 }

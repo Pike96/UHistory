@@ -8,21 +8,32 @@ import theme from './theme';
 import AuthView from './AuthView';
 import BackupView from './BackupView';
 import Notification from './Notification';
-import { NotificationProps } from './interfaces';
+import { NotificationData } from './interfaces';
+import { getLocalBrowserStorage } from './browserUtils';
+import { Button } from '@mui/material';
 
 const Popup = () => {
-  const [authDone, setAuthDone] = useState(false);
-
+  const [token, setToken] = useState('');
   const [notification, setNotification] = useState({
     message: '',
     severity: 'info',
-  } as NotificationProps);
+  } as NotificationData);
   const [notiOpen, setNotiOpen] = useState(false);
 
-  const notify = (_notification: NotificationProps) => {
+  useEffect(() => {
+    if (token) return;
+
+    getLocalBrowserStorage('accessToken').then(({ accessToken }) => {
+      setToken(accessToken);
+    });
+  }, [token]);
+
+  const notify = (_notification: NotificationData) => {
     setNotification(_notification);
     setNotiOpen(true);
   };
+
+  const handleTestCtaClick = () => {};
 
   return (
     <ThemeProvider theme={theme}>
@@ -35,10 +46,10 @@ const Popup = () => {
         width={432}
         minHeight={152}
       >
-        {authDone ? (
-          <BackupView setAuthDone={setAuthDone} notify={notify} />
+        {token ? (
+          <BackupView notify={notify} token={token} setToken={setToken} />
         ) : (
-          <AuthView setAuthDone={setAuthDone} notify={notify} />
+          <AuthView notify={notify} setToken={setToken} />
         )}
 
         <Notification
@@ -47,6 +58,12 @@ const Popup = () => {
           open={notiOpen}
           setOpen={setNotiOpen}
         />
+
+        <Grid item xs={12}>
+          <Button variant="outlined" onClick={handleTestCtaClick}>
+            Token: {token.substring(0, 16)}
+          </Button>
+        </Grid>
       </Grid>
     </ThemeProvider>
   );

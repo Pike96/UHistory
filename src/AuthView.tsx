@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 import { Grid } from '@mui/material';
@@ -8,22 +8,24 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { auth } from './authUtils';
 import { AuthViewProps } from './interfaces';
 
-const AuthView: FC<AuthViewProps> = ({ setAuthDone, notify }) => {
+const AuthView: FC<AuthViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);
 
   const handleAuthClick = async (): Promise<void> => {
     setLoading(true);
+    const token = await auth({ interactive: true });
+    setLoading(false);
 
-    if (await auth({ interactive: true })) {
-      setAuthDone(true);
+    if (token) {
+      console.log('setLocalToken');
+      setToken(token);
     } else {
       notify({
-        message: "Can't sign in to your Google Drive. Please try again later.",
+        message:
+          "We can't sign in to your Google Drive. You may have cancelled it. Please try again later",
         severity: 'error',
       });
     }
-
-    setLoading(false);
   };
 
   return (
