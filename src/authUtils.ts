@@ -4,30 +4,8 @@ import {
   setLocalBrowserStorage,
   removeCachedAuthToken,
 } from './browserUtils';
-import { AuthOption } from './interfaces';
-
-export async function authTest() {
-  const token: string | null = await auth({ interactive: true });
-  chrome.identity.getAuthToken({ interactive: true }, async function (token) {
-    console.log(token);
-    axios
-      .get('https://www.googleapis.com/drive/v3/files', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((error) => {
-        if (error?.response?.data?.error?.message === 'Invalid Credentials') {
-          signOutForToken(token);
-        }
-      });
-  });
-}
+import { AuthOption, ErrorMessage } from './interfaces';
+import * as store from './store';
 
 export function auth(option: AuthOption): Promise<string> {
   return new Promise<string>((resolve) => {
@@ -42,7 +20,8 @@ export function auth(option: AuthOption): Promise<string> {
   });
 }
 
-export async function signOutForToken(token: string): Promise<void> {
+export async function signOut(): Promise<void | ErrorMessage> {
+  const token = store.getToken();
   try {
     await Promise.all([
       token &&
@@ -50,5 +29,9 @@ export async function signOutForToken(token: string): Promise<void> {
       token && removeCachedAuthToken(token),
       setLocalBrowserStorage({ accessToken: '' }),
     ]);
-  } catch (e) {}
+  } catch (e) {
+    return {
+      error: 'Unknown problem for signing out',
+    };
+  }
 }

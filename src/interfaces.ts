@@ -1,4 +1,5 @@
 import { AlertColor } from '@mui/material';
+import { AxiosRequestHeaders } from 'axios';
 
 export interface AuthOption {
   interactive: boolean;
@@ -21,6 +22,20 @@ export interface AuthViewProps {
 
 export interface BackupViewProps {
   notify(notification: NotificationData): void;
-  token: string;
   setToken(state: string): void;
+}
+
+export interface SignOutProps extends BackupViewProps {
+  loading: boolean;
+  setLoading(state: boolean): void;
+}
+
+export interface DriveRequestHeader extends AxiosRequestHeaders {
+  Authorization: string;
+  Accept: string;
+  'Content-Type': string;
+}
+
+export interface ErrorMessage {
+  error: string;
 }

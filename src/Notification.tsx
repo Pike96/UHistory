@@ -1,12 +1,6 @@
-import React, { FC, SyntheticEvent, useEffect, useState } from 'react';
+import React, { FC, SyntheticEvent } from 'react';
 
-import {
-  Alert,
-  AlertColor,
-  Grid,
-  Snackbar,
-  SnackbarCloseReason,
-} from '@mui/material';
+import { Alert, Snackbar, SnackbarCloseReason } from '@mui/material';
 import { NotificationProps } from './interfaces';
 
 const Notification: FC<NotificationProps> = ({

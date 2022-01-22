@@ -10,17 +10,23 @@ import BackupView from './BackupView';
 import Notification from './Notification';
 import { NotificationData } from './interfaces';
 import { getLocalBrowserStorage } from './browserUtils';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
+import * as store from './store';
 
 const Popup = () => {
-  const [token, setToken] = useState('');
+  const [token, setStateToken] = useState('');
   const [notification, setNotification] = useState({
     message: '',
     severity: 'info',
   } as NotificationData);
   const [notiOpen, setNotiOpen] = useState(false);
+
+  const setToken = (token: string) => {
+    store.setToken(token);
+    setStateToken(token);
+  };
 
   useEffect(() => {
     if (token) return;
@@ -35,21 +41,19 @@ const Popup = () => {
     setNotiOpen(true);
   };
 
-  const handleTestCtaClick = () => {};
-
   return (
     <ThemeProvider theme={theme}>
       <Grid
         container
-        spacing={4}
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        width={432}
-        minHeight={152}
+        paddingTop={2}
+        width={408}
+        minHeight={160}
+        spacing={3}
+        alignItems={'center'}
+        textAlign={'center'}
       >
         {token ? (
-          <BackupView notify={notify} token={token} setToken={setToken} />
+          <BackupView notify={notify} setToken={setToken} />
         ) : (
           <AuthView notify={notify} setToken={setToken} />
         )}
@@ -62,9 +66,16 @@ const Popup = () => {
         />
 
         <Grid item xs={12}>
-          <Button variant="outlined" onClick={handleTestCtaClick}>
-            Token: {token.substring(0, 16)}
-          </Button>
+          <Typography
+            variant="body1"
+            component="p"
+            fontSize={12}
+            color={'#bbb'}
+          >
+            *Your data is secure. We can't see your data.
+            <br />
+            The only website we connect for you is Google.
+          </Typography>
         </Grid>
       </Grid>
     </ThemeProvider>

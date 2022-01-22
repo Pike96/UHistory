@@ -17,12 +17,11 @@ const AuthView: FC<AuthViewProps> = ({ notify, setToken }) => {
     setLoading(false);
 
     if (token) {
-      console.log('setLocalToken');
       setToken(token);
     } else {
       notify({
         message:
-          "We can't sign in to your Google Drive. You may have cancelled it. Please try again later",
+          "We can't sign in to your drive. You may have cancelled it. Please try again later.",
         severity: 'error',
       });
     }
