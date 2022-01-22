@@ -15,24 +15,24 @@ export async function doesFileExistInDrive(filename: string): Promise<boolean> {
     throw Error(data.error);
   }
 
-  return data && data.files && data.files.length;
+  return data?.files?.length;
 }
 
-export async function doesFolderExistsInDrive(
+export async function getFolderIdFromDrive(
   folderName: string
-): Promise<boolean> {
+): Promise<string|boolean> {
   const data = await listDriveFiles(
-    `mimeType = 'application/vnd.google-apps.folder' and name = '${folderName}'`
+    `mimeType = 'application/vnd.google-apps.folder' and trashed = false and name = '${folderName}'`
   );
 
   if (data.error) {
     throw Error(data.error);
   }
 
-  return data && data.files && data.files.length;
+  return data?.files?.[0]?.id;
 }
 
-export async function createFolderInDrive(): Promise<void> {
+export async function createFolderInDrive(): Promise<string|boolean> {
   const data = await createDriveFiles({
     name: 'UHistoryBackup',
     mimeType: 'application/vnd.google-apps.folder',
@@ -41,6 +41,8 @@ export async function createFolderInDrive(): Promise<void> {
   if (data.error) {
     throw Error(data.error);
   }
+
+  return data?.id;
 }
 
 export async function listDriveFiles(q: string) {
@@ -49,7 +51,7 @@ export async function listDriveFiles(q: string) {
     fields: 'nextPageToken, files(id, name)',
   };
 
-  return await fetchDriveApiTwice(
+  return await fetchDriveApiRetryAuth(
     axios.get('https://www.googleapis.com/drive/v3/files', {
       headers: getHeaders(store.getToken()),
       params,
@@ -58,7 +60,7 @@ export async function listDriveFiles(q: string) {
 }
 
 export async function createDriveFiles(folderMetadata: FolderMetadata) {
-  return await fetchDriveApiTwice(
+  return await fetchDriveApiRetryAuth(
     axios.post(
       'https://www.googleapis.com/drive/v3/files',
       {
@@ -69,11 +71,11 @@ export async function createDriveFiles(folderMetadata: FolderMetadata) {
   );
 }
 
-async function fetchDriveApiTwice(
+async function fetchDriveApiRetryAuth(
   axiosPromise: Promise<AxiosResponse<any, any>>
 ) {
   const result = await fetchDriveApi(axiosPromise);
-  if (result && result.error) {
+  if (result?.error) {
     await auth({ interactive: false });
     return await fetchDriveApi(axiosPromise);
   } else {

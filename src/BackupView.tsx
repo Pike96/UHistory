@@ -10,7 +10,7 @@ import { cancelAuth } from './authUtils';
 import {
   createFolderInDrive,
   doesFileExistInDrive,
-  doesFolderExistsInDrive,
+  getFolderIdFromDrive,
   listDriveFiles,
 } from './fileUtils';
 import SignOut from './SignOut';
@@ -18,30 +18,32 @@ import { getMonthName, getYearName, wait } from './timeUtils';
 
 const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);
-  const [monthDiff, setMonthDiff] = useState(3);
-  const [filename, setFilename] = useState('');
+  const [monthDiff, setMonthDiff] = useState(1);
+  const [fileName, setFileName] = useState('');
+  const [folderName, setFolderName] = useState('UHistoryBackup');
   const [tag, setTag] = useState('');
 
   const updateFilename = () => {
-    setFilename(
+    setFileName(
       `UHB${getYearName(monthDiff)}${getMonthName(monthDiff)}${tag}.txt`
     );
   };
 
   const backupFile = async () => {
     try {
-      if (await doesFileExistInDrive(filename)) {
+      if (await doesFileExistInDrive(fileName)) {
         notify({
-          message: `Backup already exists: ${filename}. No need to backup again.`,
+          message: `Backup already exists: ${fileName}. No need to backup again.`,
           severity: 'info',
         });
       } else {
-        if (!(await doesFolderExistsInDrive('UHistoryBackup'))) {
-          await createFolderInDrive();
+        let folderId = await getFolderIdFromDrive(folderName)
+        if (!folderId) {
+          folderId = await createFolderInDrive();
         }
-        console.log('save the file');
+        console.log(folderId);
         notify({
-          message: `Successfully backuped: ${filename}.`,
+          message: `Successfully backuped: ${fileName}.`,
           severity: 'success',
         });
       }
@@ -82,7 +84,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
     <>
       <Grid item xs={12}>
         <Typography variant="body1" component="h1">
-          Tag: {filename}
+          Tag: {fileName}
         </Typography>
       </Grid>
       <Grid item xs={6}>
