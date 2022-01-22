@@ -45,7 +45,8 @@ export function auth(option: AuthOption): Promise<string> {
 export async function signOutForToken(token: string): Promise<void> {
   try {
     await Promise.all([
-      token && axios.get(`https://accounts.google.com/o/oauth2/revoke?token=${token}`),
+      token &&
+        axios.get(`https://accounts.google.com/o/oauth2/revoke?token=${token}`),
       token && removeCachedAuthToken(token),
       setLocalBrowserStorage({ accessToken: '' }),
     ]);

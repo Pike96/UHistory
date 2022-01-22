@@ -11,6 +11,8 @@ import Notification from './Notification';
 import { NotificationData } from './interfaces';
 import { getLocalBrowserStorage } from './browserUtils';
 import { Button } from '@mui/material';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/700.css';
 
 const Popup = () => {
   const [token, setToken] = useState('');
