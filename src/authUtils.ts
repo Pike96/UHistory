@@ -20,7 +20,7 @@ export function auth(option: AuthOption): Promise<string> {
   });
 }
 
-export async function signOut(): Promise<void | ErrorMessage> {
+export async function cancelAuth(): Promise<void | ErrorMessage> {
   const token = store.getToken();
   try {
     await Promise.all([

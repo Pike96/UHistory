@@ -1,42 +1,90 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import AddToDriveIcon from '@mui/icons-material/AddToDrive';
 import LoadingButton from '@mui/lab/LoadingButton';
-import moment from 'moment';
 
 import { BackupViewProps } from './interfaces';
-import { driveFilesList } from './fileUtils';
+import { cancelAuth } from './authUtils';
+import {
+  createFolderInDrive,
+  doesFileExistInDrive,
+  doesFolderExistsInDrive,
+  listDriveFiles,
+} from './fileUtils';
 import SignOut from './SignOut';
+import { getMonthName, getYearName, wait } from './timeUtils';
 
 const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);
   const [monthDiff, setMonthDiff] = useState(3);
   const [filename, setFilename] = useState('');
+  const [tag, setTag] = useState('');
+  
+  const updateFilename = () => {
+    setFilename(
+      `UHB${getYearName(monthDiff)}${getMonthName(monthDiff)}${tag}.txt`
+    );
+  };
+
+  const backupFile = async () => {
+    try {
+      if (await doesFileExistInDrive(filename)) {
+        notify({
+          message: `Backup already exists: ${filename}. No need to backup again.`,
+          severity: 'info',
+        });
+      } else {
+        if (!(await doesFolderExistsInDrive('UHistoryBackup'))) {
+          await createFolderInDrive();
+        }
+        console.log('save the file');
+        notify({
+          message: 'Successfully backuped',
+          severity: 'success',
+        });
+      }
+    }
+    catch (e) {
+      // await signOut('We can\'t backup right now. Please try to sign in again.');
+    }
+  };
+
+  const signOut = async (message?: string): Promise<void> => {
+    setLoading(true);
+    await cancelAuth();
+    setLoading(false);
+    if (message) {
+      notify({
+        message,
+        severity: 'error',
+      });
+    }
+    else {
+      notify({
+        message: 'Successfully signed out',
+        severity: 'success',
+      });
+    }
+    setToken('');
+  };
 
   const handleBackupClick = async () => {
     setLoading(true);
-    const result = await driveFilesList(
-      "mimeType = 'application/vnd.google-apps.folder' and name = 'UHistoryBackup'"
-    );
+    await Promise.all([backupFile(), wait(6_000)]);
     setLoading(false);
-    console.log(result);
-    notify({
-      message: 'Successfully backuped',
-      severity: 'success',
-    });
   };
 
-  const getMonthName = (monthDiff: number): string => {
-    return moment().subtract(monthDiff, 'months').format('MMM');
-  };
+  useEffect(() => {
+    updateFilename();
+  }, [monthDiff, tag]);
 
   return (
     <>
       <Grid item xs={12}>
         <Typography variant="body1" component="h1">
-          Tag:
+          Tag: {filename}
         </Typography>
       </Grid>
       <Grid item xs={6}>
@@ -70,10 +118,8 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
         </LoadingButton>
       </Grid>
       <SignOut
-        notify={notify}
-        setToken={setToken}
         loading={loading}
-        setLoading={setLoading}
+        signOut={signOut}
       />
     </>
   );

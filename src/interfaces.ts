@@ -25,9 +25,9 @@ export interface BackupViewProps {
   setToken(state: string): void;
 }
 
-export interface SignOutProps extends BackupViewProps {
+export interface SignOutProps {
   loading: boolean;
-  setLoading(state: boolean): void;
+  signOut(): Promise<void>;
 }
 
 export interface DriveRequestHeader extends AxiosRequestHeaders {
@@ -39,3 +39,10 @@ export interface DriveRequestHeader extends AxiosRequestHeaders {
 export interface ErrorMessage {
   error: string;
 }
+
+export interface FolderMetadata {
+  name: string;
+  mimeType: string;
+}
+
+export type AxiosMethod = 'get' | 'post';

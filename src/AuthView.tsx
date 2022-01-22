@@ -18,6 +18,10 @@ const AuthView: FC<AuthViewProps> = ({ notify, setToken }) => {
 
     if (token) {
       setToken(token);
+      notify({
+        message: 'CLOSE_NOTI',
+        severity: 'success',
+      });
     } else {
       notify({
         message:

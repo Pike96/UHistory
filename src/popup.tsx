@@ -37,6 +37,10 @@ const Popup = () => {
   }, [token]);
 
   const notify = (_notification: NotificationData) => {
+    if (_notification.message === 'CLOSE_NOTI') {
+      setNotiOpen(false);
+      return;
+    }
     setNotification(_notification);
     setNotiOpen(true);
   };

@@ -4,26 +4,12 @@ import { Grid } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { signOut } from './authUtils';
 import { SignOutProps } from './interfaces';
 
 const SignOut: FC<SignOutProps> = ({
-  notify,
-  setToken,
   loading,
-  setLoading,
+  signOut,
 }) => {
-  const handleSignOutClick = async (): Promise<void> => {
-    setLoading(true);
-    await signOut();
-    setLoading(false);
-    notify({
-      message: 'Successfully signed out',
-      severity: 'success',
-    });
-    setToken('');
-  };
-
   return (
     <Grid item xs={6} marginTop={2}>
       <LoadingButton
@@ -32,7 +18,7 @@ const SignOut: FC<SignOutProps> = ({
         loadingPosition="start"
         variant="outlined"
         startIcon={<LogoutIcon />}
-        onClick={handleSignOutClick}
+        onClick={signOut}
       >
         Sign Out
       </LoadingButton>
