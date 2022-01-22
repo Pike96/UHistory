@@ -6,10 +6,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { SignOutProps } from './interfaces';
 
-const SignOut: FC<SignOutProps> = ({
-  loading,
-  signOut,
-}) => {
+const SignOut: FC<SignOutProps> = ({ loading, signOut }) => {
   return (
     <Grid item xs={6} marginTop={2}>
       <LoadingButton

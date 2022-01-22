@@ -21,7 +21,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const [monthDiff, setMonthDiff] = useState(3);
   const [filename, setFilename] = useState('');
   const [tag, setTag] = useState('');
-  
+
   const updateFilename = () => {
     setFilename(
       `UHB${getYearName(monthDiff)}${getMonthName(monthDiff)}${tag}.txt`
@@ -41,12 +41,11 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
         }
         console.log('save the file');
         notify({
-          message: 'Successfully backuped',
+          message: `Successfully backuped: ${filename}.`,
           severity: 'success',
         });
       }
-    }
-    catch (e) {
+    } catch (e) {
       // await signOut('We can\'t backup right now. Please try to sign in again.');
     }
   };
@@ -60,8 +59,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
         message,
         severity: 'error',
       });
-    }
-    else {
+    } else {
       notify({
         message: 'Successfully signed out',
         severity: 'success',
@@ -117,10 +115,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
           Backup
         </LoadingButton>
       </Grid>
-      <SignOut
-        loading={loading}
-        signOut={signOut}
-      />
+      <SignOut loading={loading} signOut={signOut} />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import axios, { AxiosStatic, Method } from 'axios';
+import axios, { AxiosResponse, AxiosStatic, Method } from 'axios';
 import { auth, cancelAuth } from './authUtils';
 import {
   AxiosMethod,
@@ -9,9 +9,7 @@ import {
 import * as store from './store';
 
 export async function doesFileExistInDrive(filename: string): Promise<boolean> {
-  const data = await listDriveFiles(
-    `trashed = false and name = '${filename}'`
-  );
+  const data = await listDriveFiles(`trashed = false and name = '${filename}'`);
 
   if (data.error) {
     throw Error(data.error);
@@ -20,7 +18,9 @@ export async function doesFileExistInDrive(filename: string): Promise<boolean> {
   return data && data.files && data.files.length;
 }
 
-export async function doesFolderExistsInDrive(folderName: string): Promise<boolean> {
+export async function doesFolderExistsInDrive(
+  folderName: string
+): Promise<boolean> {
   const data = await listDriveFiles(
     `mimeType = 'application/vnd.google-apps.folder' and name = '${folderName}'`
   );
@@ -50,38 +50,40 @@ export async function listDriveFiles(q: string) {
   };
 
   return await fetchDriveApiTwice(
-    'get',
-    'https://www.googleapis.com/drive/v3/files',
-    {
-      headers: getHeader(store.getToken()),
+    axios.get('https://www.googleapis.com/drive/v3/files', {
+      headers: getHeaders(store.getToken()),
       params,
-    }
+    })
   );
 }
 
 export async function createDriveFiles(folderMetadata: FolderMetadata) {
   return await fetchDriveApiTwice(
-    'post',
-    'https://www.googleapis.com/drive/v3/files',
-    folderMetadata
+    axios.post(
+      'https://www.googleapis.com/drive/v3/files',
+      {
+        ...folderMetadata,
+      },
+      { headers: getHeaders(store.getToken()) }
+    )
   );
 }
 
-async function fetchDriveApiTwice(method: AxiosMethod, url: string, args: any) {
-  const result = await fetchDriveApi(method, url, args);
+async function fetchDriveApiTwice(
+  axiosPromise: Promise<AxiosResponse<any, any>>
+) {
+  const result = await fetchDriveApi(axiosPromise);
   if (result && result.error) {
     await auth({ interactive: false });
-    return await fetchDriveApi(method, url, args);
+    return await fetchDriveApi(axiosPromise);
   } else {
     return result;
   }
 }
 
-async function fetchDriveApi(method: AxiosMethod, url: string, args: any) {
+async function fetchDriveApi(axiosPromise: Promise<AxiosResponse<any, any>>) {
   return new Promise<any | ErrorMessage>((resolve) => {
-    axios[method](url, {
-      ...args,
-    })
+    axiosPromise
       .then((result) => {
         resolve(result.data);
       })
@@ -98,7 +100,7 @@ async function fetchDriveApi(method: AxiosMethod, url: string, args: any) {
   });
 }
 
-function getHeader(token: string): DriveRequestHeader {
+function getHeaders(token: string): DriveRequestHeader {
   return {
     Authorization: `Bearer ${token}`,
     Accept: 'application/json',
