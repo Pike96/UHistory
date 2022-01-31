@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import AddToDriveIcon from '@mui/icons-material/AddToDrive';
+import FileOpenIcon from '@mui/icons-material/FileOpen';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { BackupViewProps, ErrorType } from './interfaces';
@@ -21,7 +22,12 @@ import {
   wait,
 } from './timeUtils';
 import moment from 'moment';
-import { readBrowserHistory } from './browserUtils';
+import {
+  getLocalBrowserStorage,
+  readBrowserHistory,
+  setLocalBrowserStorage,
+} from './browserUtils';
+import PopupOptions from './PopupOptions';
 
 const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);
@@ -44,6 +50,27 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const updateMonthDiff = (_monthDiff: number) => {
     setMonthDiff(_monthDiff);
     setMonthDiffMoment(getMonthDiffMoment(_monthDiff));
+  };
+
+  const updateFolderName = async (_folderName: string) => {
+    setFolderName(_folderName);
+    await setLocalBrowserStorage({ folderName: _folderName });
+  };
+
+  const updateTag = async (_tag: string) => {
+    setTag(_tag);
+    await setLocalBrowserStorage({ tag: _tag });
+  };
+
+  const loadSettings = async () => {
+    getLocalBrowserStorage('folderName').then(({ _folderName }) => {
+      _folderName
+        ? setFolderName(_folderName)
+        : updateFolderName('UHistoryBackup');
+    });
+    getLocalBrowserStorage('tag').then(({ _tag }) => {
+      _tag ? setTag(_tag) : updateTag('');
+    });
   };
 
   const backupFile = async () => {
@@ -123,11 +150,26 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   };
 
   useEffect(() => {
+    loadSettings();
+  }, []);
+
+  useEffect(() => {
     updateFilename();
   }, [monthDiff, folderName, tag]);
 
   return (
     <>
+      <Grid item xs={12}>
+        <LoadingButton
+          color="primary"
+          loading={loading}
+          loadingPosition="start"
+          variant="contained"
+          startIcon={<FileOpenIcon />}
+        >
+          Read history from files
+        </LoadingButton>
+      </Grid>
       <Grid item xs={12}>
         <Typography variant="body1" component="h1">
           Backup File Location:
@@ -166,6 +208,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
         </LoadingButton>
       </Grid>
       <SignOut loading={loading} signOut={signOut} />
+      <PopupOptions updateFolderName={updateFolderName} updateTag={updateTag} />
     </>
   );
 };
