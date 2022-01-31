@@ -48,6 +48,34 @@ export async function createFolderInDrive(
   return data?.id;
 }
 
+export async function saveHistoryFile(
+  folderId: string,
+  fileName: string,
+  historyData: chrome.history.HistoryItem[]
+) {
+  const MIME_TYPE = 'application/json';
+  const metaData = {
+    name: fileName,
+    mimeType: MIME_TYPE,
+    parents: [folderId],
+  };
+  const form = new FormData();
+
+  form.append('metadata', new Blob([JSON.stringify(metaData)], { type: 'application/json' }));
+  form.append('file', JSON.stringify(historyData));
+
+  const response = await uploadDriveFile(form);
+  if (response?.name) {
+    return response?.name;
+  }
+
+  if (response?.error) {
+    return { error: response?.error };
+  }
+
+  return null;
+}
+
 // Helper functions:
 
 async function listDriveFiles(q: string) {
@@ -76,12 +104,25 @@ async function createDriveFiles(folderMetadata: FolderMetadata) {
   );
 }
 
+async function uploadDriveFile(
+  body: FormData,
+) {
+  return await fetchDriveApiRetryAuth(
+    axios.post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', body, {
+      headers: {
+        Authorization: `Bearer ${store.getToken()}`,
+      },
+    })
+  );
+}
+
 async function fetchDriveApiRetryAuth(
   axiosPromise: Promise<AxiosResponse<any, any>>
 ) {
   const result = await fetchDriveApi(axiosPromise);
-  if (result?.error) {
+  if (result?.error === ErrorType.InvalidToken) {
     await auth({ interactive: false });
+    console.log('Retry auth');
     return await fetchDriveApi(axiosPromise);
   } else {
     return result;
@@ -95,16 +136,25 @@ async function fetchDriveApi(axiosPromise: Promise<AxiosResponse<any, any>>) {
         resolve(result.data);
       })
       .catch(async (error) => {
-        if (error?.response?.data?.error?.message === 'Invalid Credentials') {
+        const errorData = error?.response?.data;
+
+        if (errorData?.error?.message === 'Invalid Credentials') {
           resolve({
-            error:
-              ErrorType.InvalidToken,
+            error: ErrorType.InvalidToken,
+          });
+        } else if (isString(errorData)) {
+          resolve({
+            error: errorData,
           });
         } else {
           resolve(null);
         }
       });
   });
+}
+
+function isString(data: any) {
+  return Object.prototype.toString.call(data) === '[object String]';
 }
 
 function getHeaders(token: string): DriveRequestHeader {

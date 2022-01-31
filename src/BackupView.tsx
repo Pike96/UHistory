@@ -11,6 +11,7 @@ import {
   createFolderInDrive,
   doesFileExistInDrive,
   getFolderIdFromDrive,
+  saveHistoryFile,
 } from './driveUtils';
 import SignOut from './SignOut';
 import {
@@ -36,7 +37,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
     setFileName(
       `UHB${getYearName(monthDiffMoment)}${getMonthName(
         monthDiffMoment
-      )}${tag}.txt`
+      )}${tag}.json`
     );
   };
 
@@ -64,23 +65,29 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
             message: `No history found for the selected month`,
             severity: 'warning',
           });
-        }
-        else {
-          const seriralizedData = JSON.stringify(historyData);
-          const deserializedData = JSON.parse(seriralizedData);
-          console.log(deserializedData);
-  
-          notify({
-            message: `Successfully backuped: ${fileName}.`,
-            severity: 'success',
-          });
+        } else {
+          const response = await saveHistoryFile(folderId as string, fileName, historyData);
+
+          if (response === fileName) {
+            notify({
+              message: `Successfully backuped: ${fileName}.`,
+              severity: 'success',
+            });
+          }
+          else {
+            notify({
+              message: response?.error || 'Unknown error. Please try again later',
+              severity: 'error',
+            });
+          }
         }
       }
     } catch (error: any) {
       if (error.message === ErrorType.InvalidToken) {
-        await signOut("We can't backup right now. Please try to sign in again.");
-      }
-      else {
+        await signOut(
+          "We can't backup right now. Please try to sign in again."
+        );
+      } else {
         notify({
           message: error.message,
           severity: 'error',
@@ -115,13 +122,13 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
 
   useEffect(() => {
     updateFilename();
-  }, [monthDiff, tag]);
+  }, [monthDiff, folderName, tag]);
 
   return (
     <>
       <Grid item xs={12}>
         <Typography variant="body1" component="h1">
-          Filename: {fileName}
+          Backup File Location:<br/>{folderName}/{fileName}
         </Typography>
       </Grid>
       <Grid item xs={6}>

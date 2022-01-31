@@ -12,6 +12,7 @@ export function auth(option: AuthOption): Promise<string> {
     try {
       chrome.identity.getAuthToken(option, async function (token: string) {
         await setLocalBrowserStorage({ accessToken: token });
+        console.log('getAuthToken: ', token);
         resolve(token);
       });
     } catch (e) {
