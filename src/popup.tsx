@@ -76,7 +76,7 @@ const Popup = () => {
             fontSize={12}
             color={'#bbb'}
           >
-            *Your data is secure. We can't see your data.
+            *Your data is secure. We can't see your history.
             <br />
             The only website we connect for you is Google.
           </Typography>

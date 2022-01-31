@@ -1,12 +1,15 @@
 import moment from 'moment';
-import { resolveConfig } from 'prettier';
 
-export function getMonthName(monthDiff: number): string {
-  return moment().subtract(monthDiff, 'months').format('MMM');
+export function getMonthName(_moment: moment.Moment): string | undefined {
+  return _moment.format('MMM');
 }
 
-export function getYearName(monthDiff: number): string {
-  return moment().subtract(monthDiff, 'months').format('YYYY');
+export function getYearName(_moment: moment.Moment): string | undefined {
+  return _moment.format('YYYY');
+}
+
+export function getMonthDiffMoment(monthDiff: number): moment.Moment {
+  return moment.utc().subtract(monthDiff, 'months');
 }
 
 export function wait(ms: number): Promise<void> {

@@ -36,6 +36,13 @@ export interface DriveRequestHeader extends AxiosRequestHeaders {
   'Content-Type': string;
 }
 
+export interface HistorySearchQuery {
+  text: string;
+  maxResults: number;
+  startTime: number;
+  endTime: number;
+}
+
 export interface ErrorMessage {
   error: string;
 }

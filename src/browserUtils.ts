@@ -21,3 +21,22 @@ export function removeCachedAuthToken(token: string): Promise<void> {
     chrome.identity.removeCachedAuthToken({ token }, resolve);
   });
 }
+
+export async function readBrowserHistory(
+  monthDiffMoment: moment.Moment
+): Promise<chrome.history.HistoryItem[]> {
+  const query: chrome.history.HistoryQuery = {
+    text: '',
+    maxResults: 9_999_999,
+    startTime: monthDiffMoment.startOf('month').valueOf(),
+    endTime: monthDiffMoment.endOf('month').valueOf(),
+  };
+
+  return await getHistoryData(query);
+}
+
+function getHistoryData(query: chrome.history.HistoryQuery) {
+  return new Promise<chrome.history.HistoryItem[]>((resolve) => {
+    chrome.history.search(query, resolve);
+  });
+}

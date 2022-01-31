@@ -11,22 +11,38 @@ import {
   createFolderInDrive,
   doesFileExistInDrive,
   getFolderIdFromDrive,
-  listDriveFiles,
-} from './fileUtils';
+} from './driveUtils';
 import SignOut from './SignOut';
-import { getMonthName, getYearName, wait } from './timeUtils';
+import {
+  getMonthDiffMoment,
+  getMonthName,
+  getYearName,
+  wait,
+} from './timeUtils';
+import moment from 'moment';
+import { readBrowserHistory } from './browserUtils';
 
 const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);
   const [monthDiff, setMonthDiff] = useState(1);
+  const [monthDiffMoment, setMonthDiffMoment] = useState<moment.Moment>(
+    getMonthDiffMoment(monthDiff)
+  );
   const [fileName, setFileName] = useState('');
   const [folderName, setFolderName] = useState('UHistoryBackup');
   const [tag, setTag] = useState('');
 
   const updateFilename = () => {
     setFileName(
-      `UHB${getYearName(monthDiff)}${getMonthName(monthDiff)}${tag}.txt`
+      `UHB${getYearName(monthDiffMoment)}${getMonthName(
+        monthDiffMoment
+      )}${tag}.txt`
     );
+  };
+
+  const updateMonthDiff = (_monthDiff: number) => {
+    setMonthDiff(_monthDiff);
+    setMonthDiffMoment(getMonthDiffMoment(_monthDiff));
   };
 
   const backupFile = async () => {
@@ -37,18 +53,31 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
           severity: 'info',
         });
       } else {
-        let folderId = await getFolderIdFromDrive(folderName)
+        let folderId = await getFolderIdFromDrive(folderName);
         if (!folderId) {
-          folderId = await createFolderInDrive();
+          folderId = await createFolderInDrive(folderName);
         }
-        console.log(folderId);
-        notify({
-          message: `Successfully backuped: ${fileName}.`,
-          severity: 'success',
-        });
+        const historyData = await readBrowserHistory(monthDiffMoment);
+
+        if (historyData?.length === 0) {
+          notify({
+            message: `No history found for the selected month`,
+            severity: 'warning',
+          });
+        }
+        else {
+          const seriralizedData = JSON.stringify(historyData);
+          const deserializedData = JSON.parse(seriralizedData);
+          console.log(deserializedData);
+  
+          notify({
+            message: `Successfully backuped: ${fileName}.`,
+            severity: 'success',
+          });
+        }
       }
     } catch (e) {
-      // await signOut('We can\'t backup right now. Please try to sign in again.');
+      await signOut("We can't backup right now. Please try to sign in again.");
     }
   };
 
@@ -84,7 +113,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
     <>
       <Grid item xs={12}>
         <Typography variant="body1" component="h1">
-          Tag: {fileName}
+          Filename: {fileName}
         </Typography>
       </Grid>
       <Grid item xs={6}>
@@ -98,9 +127,9 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
             <Button
               key={_monthDiff}
               variant={monthDiff === _monthDiff ? 'contained' : undefined}
-              onClick={() => setMonthDiff(_monthDiff)}
+              onClick={() => updateMonthDiff(_monthDiff)}
             >
-              {getMonthName(_monthDiff)}
+              {getMonthName(getMonthDiffMoment(_monthDiff))}
             </Button>
           ))}
         </ButtonGroup>

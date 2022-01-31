@@ -20,7 +20,7 @@ export async function doesFileExistInDrive(filename: string): Promise<boolean> {
 
 export async function getFolderIdFromDrive(
   folderName: string
-): Promise<string|boolean> {
+): Promise<string | boolean> {
   const data = await listDriveFiles(
     `mimeType = 'application/vnd.google-apps.folder' and trashed = false and name = '${folderName}'`
   );
@@ -32,9 +32,11 @@ export async function getFolderIdFromDrive(
   return data?.files?.[0]?.id;
 }
 
-export async function createFolderInDrive(): Promise<string|boolean> {
+export async function createFolderInDrive(
+  folderName: string
+): Promise<string | boolean> {
   const data = await createDriveFiles({
-    name: 'UHistoryBackup',
+    name: folderName,
     mimeType: 'application/vnd.google-apps.folder',
   });
 
@@ -45,7 +47,9 @@ export async function createFolderInDrive(): Promise<string|boolean> {
   return data?.id;
 }
 
-export async function listDriveFiles(q: string) {
+// Helper functions:
+
+async function listDriveFiles(q: string) {
   const params = {
     q,
     fields: 'nextPageToken, files(id, name)',
@@ -59,7 +63,7 @@ export async function listDriveFiles(q: string) {
   );
 }
 
-export async function createDriveFiles(folderMetadata: FolderMetadata) {
+async function createDriveFiles(folderMetadata: FolderMetadata) {
   return await fetchDriveApiRetryAuth(
     axios.post(
       'https://www.googleapis.com/drive/v3/files',

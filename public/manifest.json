@@ -19,6 +19,7 @@
   },
 
   "permissions": [
+    "history",
     "identity",
     "storage"
   ],
