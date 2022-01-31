@@ -1,12 +1,28 @@
 import React, { FC, useState } from 'react';
 
-import { Grid } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  Grid,
+} from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { SignOutProps } from './interfaces';
 
 const SignOut: FC<SignOutProps> = ({ loading, signOut }) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Grid item xs={6} marginTop={2}>
       <LoadingButton
@@ -15,10 +31,27 @@ const SignOut: FC<SignOutProps> = ({ loading, signOut }) => {
         loadingPosition="start"
         variant="outlined"
         startIcon={<LogoutIcon />}
-        onClick={signOut}
+        onClick={handleClickOpen}
       >
         Sign Out
       </LoadingButton>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {'Are you sure you want to sign out?'}
+        </DialogTitle>
+
+        <DialogActions>
+          <Button onClick={signOut}>Yes</Button>
+          <Button onClick={handleClose} autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
   );
 };
