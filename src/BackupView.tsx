@@ -66,17 +66,21 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
             severity: 'warning',
           });
         } else {
-          const response = await saveHistoryFile(folderId as string, fileName, historyData);
+          const response = await saveHistoryFile(
+            folderId as string,
+            fileName,
+            historyData
+          );
 
           if (response === fileName) {
             notify({
               message: `Successfully backuped: ${fileName}.`,
               severity: 'success',
             });
-          }
-          else {
+          } else {
             notify({
-              message: response?.error || 'Unknown error. Please try again later',
+              message:
+                response?.error || 'Unknown error. Please try again later',
               severity: 'error',
             });
           }
@@ -84,9 +88,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
       }
     } catch (error: any) {
       if (error.message === ErrorType.InvalidToken) {
-        await signOut(
-          "We can't backup right now. Please try to sign in again."
-        );
+        await signOut(ErrorType.InvalidToken);
       } else {
         notify({
           message: error.message,
@@ -100,9 +102,10 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
     setLoading(true);
     await cancelAuth();
     setLoading(false);
-    if (message) {
+    setToken('');
+    if (message === ErrorType.InvalidToken) {
       notify({
-        message,
+        message: ErrorType.InvalidToken,
         severity: 'error',
       });
     } else {
@@ -111,7 +114,6 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
         severity: 'success',
       });
     }
-    setToken('');
   };
 
   const handleBackupClick = async () => {
@@ -128,7 +130,9 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
     <>
       <Grid item xs={12}>
         <Typography variant="body1" component="h1">
-          Backup File Location:<br/>{folderName}/{fileName}
+          Backup File Location:
+          <br />
+          {folderName}/{fileName}
         </Typography>
       </Grid>
       <Grid item xs={6}>

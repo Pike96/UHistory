@@ -48,7 +48,8 @@ export interface ErrorMessage {
 }
 
 export enum ErrorType {
-  InvalidToken = 'Your authentication is not valid any more. Please sign in again',
+  SignInFailed = "We can't sign in to your drive. You may have cancelled it. Please try again later.",
+  InvalidToken = "We can't backup right now. Please try to sign in again.",
 }
 
 export interface FolderMetadata {

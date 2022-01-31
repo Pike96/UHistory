@@ -61,7 +61,10 @@ export async function saveHistoryFile(
   };
   const form = new FormData();
 
-  form.append('metadata', new Blob([JSON.stringify(metaData)], { type: 'application/json' }));
+  form.append(
+    'metadata',
+    new Blob([JSON.stringify(metaData)], { type: 'application/json' })
+  );
   form.append('file', JSON.stringify(historyData));
 
   const response = await uploadDriveFile(form);
@@ -104,15 +107,17 @@ async function createDriveFiles(folderMetadata: FolderMetadata) {
   );
 }
 
-async function uploadDriveFile(
-  body: FormData,
-) {
+async function uploadDriveFile(body: FormData) {
   return await fetchDriveApiRetryAuth(
-    axios.post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', body, {
-      headers: {
-        Authorization: `Bearer ${store.getToken()}`,
-      },
-    })
+    axios.post(
+      'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+      body,
+      {
+        headers: {
+          Authorization: `Bearer ${store.getToken()}`,
+        },
+      }
+    )
   );
 }
 

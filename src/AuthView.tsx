@@ -6,7 +6,7 @@ import CloudIcon from '@mui/icons-material/Cloud';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { auth } from './authUtils';
-import { AuthViewProps } from './interfaces';
+import { AuthViewProps, ErrorType } from './interfaces';
 
 const AuthView: FC<AuthViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);
@@ -24,8 +24,7 @@ const AuthView: FC<AuthViewProps> = ({ notify, setToken }) => {
       });
     } else {
       notify({
-        message:
-          "We can't sign in to your drive. You may have cancelled it. Please try again later.",
+        message: ErrorType.SignInFailed,
         severity: 'error',
       });
     }
