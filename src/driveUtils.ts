@@ -4,6 +4,7 @@ import {
   AxiosMethod,
   DriveRequestHeader,
   ErrorMessage,
+  ErrorType,
   FolderMetadata,
 } from './interfaces';
 import * as store from './store';
@@ -97,7 +98,7 @@ async function fetchDriveApi(axiosPromise: Promise<AxiosResponse<any, any>>) {
         if (error?.response?.data?.error?.message === 'Invalid Credentials') {
           resolve({
             error:
-              'Your authentication is not valid any more. Please sign in again',
+              ErrorType.InvalidToken,
           });
         } else {
           resolve(null);

@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import AddToDriveIcon from '@mui/icons-material/AddToDrive';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { BackupViewProps } from './interfaces';
+import { BackupViewProps, ErrorType } from './interfaces';
 import { cancelAuth } from './authUtils';
 import {
   createFolderInDrive,
@@ -76,8 +76,16 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
           });
         }
       }
-    } catch (e) {
-      await signOut("We can't backup right now. Please try to sign in again.");
+    } catch (error: any) {
+      if (error.message === ErrorType.InvalidToken) {
+        await signOut("We can't backup right now. Please try to sign in again.");
+      }
+      else {
+        notify({
+          message: error.message,
+          severity: 'error',
+        });
+      }
     }
   };
 

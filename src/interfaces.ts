@@ -47,6 +47,10 @@ export interface ErrorMessage {
   error: string;
 }
 
+export enum ErrorType {
+  InvalidToken = 'Your authentication is not valid any more. Please sign in again',
+}
+
 export interface FolderMetadata {
   name: string;
   mimeType: string;
