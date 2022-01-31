@@ -57,4 +57,8 @@ export interface FolderMetadata {
   mimeType: string;
 }
 
+export enum SpecialMessage {
+  ForceClose = 'Force to close notification.',
+}
+
 export type AxiosMethod = 'get' | 'post';

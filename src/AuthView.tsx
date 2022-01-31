@@ -6,7 +6,7 @@ import CloudIcon from '@mui/icons-material/Cloud';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { auth } from './authUtils';
-import { AuthViewProps, ErrorType } from './interfaces';
+import { AuthViewProps, ErrorType, SpecialMessage } from './interfaces';
 
 const AuthView: FC<AuthViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ const AuthView: FC<AuthViewProps> = ({ notify, setToken }) => {
     if (token) {
       setToken(token);
       notify({
-        message: 'CLOSE_NOTI',
+        message: SpecialMessage.ForceClose,
         severity: 'success',
       });
     } else {

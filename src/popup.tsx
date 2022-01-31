@@ -8,7 +8,7 @@ import theme from './theme';
 import AuthView from './AuthView';
 import BackupView from './BackupView';
 import Notification from './Notification';
-import { NotificationData } from './interfaces';
+import { NotificationData, SpecialMessage } from './interfaces';
 import { getLocalBrowserStorage } from './browserUtils';
 import { Button, Typography } from '@mui/material';
 import '@fontsource/ibm-plex-sans/500.css';
@@ -37,7 +37,7 @@ const Popup = () => {
   }, [token]);
 
   const notify = (_notification: NotificationData) => {
-    if (_notification.message === 'CLOSE_NOTI') {
+    if (_notification.message === SpecialMessage.ForceClose) {
       setNotiOpen(false);
       return;
     }
