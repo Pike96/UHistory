@@ -63,13 +63,13 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   };
 
   const loadSettings = async () => {
-    getLocalBrowserStorage('folderName').then(({ _folderName }) => {
-      _folderName
-        ? setFolderName(_folderName)
-        : updateFolderName('UHistoryBackup');
+    getLocalBrowserStorage('folderName').then((result) => {
+      result?.folderName == undefined
+        ? updateFolderName('UHistoryBackup')
+        : setFolderName(result?.folderName);
     });
-    getLocalBrowserStorage('tag').then(({ _tag }) => {
-      _tag ? setTag(_tag) : updateTag('');
+    getLocalBrowserStorage('tag').then((result) => {
+      result?.tag === undefined ? updateTag('') : setTag(result?.tag);
     });
   };
 
@@ -82,9 +82,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
         });
       } else {
         let folderId = await getFolderIdFromDrive(folderName);
-        if (!folderId) {
-          folderId = await createFolderInDrive(folderName);
-        }
+        folderId ||= await createFolderInDrive(folderName);
         const historyData = await readBrowserHistory(monthDiffMoment);
 
         if (historyData?.length === 0) {
@@ -208,7 +206,13 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
         </LoadingButton>
       </Grid>
       <SignOut loading={loading} signOut={signOut} />
-      <PopupOptions updateFolderName={updateFolderName} updateTag={updateTag} />
+      <PopupOptions
+        folderName={folderName}
+        updateFolderName={updateFolderName}
+        tag={tag}
+        updateTag={updateTag}
+        notify={notify}
+      />
     </>
   );
 };
