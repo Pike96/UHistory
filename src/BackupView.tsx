@@ -141,12 +141,6 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
     }
   };
 
-  const handleBackupClick = async () => {
-    setLoading(true);
-    await Promise.all([backupFile(), wait(6_000)]);
-    setLoading(false);
-  };
-
   useEffect(() => {
     loadSettings();
   }, []);
@@ -164,6 +158,9 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
           loadingPosition="start"
           variant="contained"
           startIcon={<FileOpenIcon />}
+          onClick={() => {
+            window.open(chrome.runtime.getURL('reader.html'));
+          }}
         >
           Read history from files
         </LoadingButton>
@@ -200,7 +197,11 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
           loadingPosition="start"
           variant="contained"
           startIcon={<AddToDriveIcon />}
-          onClick={handleBackupClick}
+          onClick={async () => {
+            setLoading(true);
+            await Promise.all([backupFile(), wait(6_000)]);
+            setLoading(false);
+          }}
         >
           Backup
         </LoadingButton>
