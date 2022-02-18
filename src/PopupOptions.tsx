@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
+import { getLocalBrowserStorage } from './browserUtils';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -33,10 +34,20 @@ const PopupOptions: FC<any> = ({
   const [open, setOpen] = useState(false);
   const [tagInput, setTagInput] = useState(tag);
   const [folderNameInput, setFolderNameInput] = useState(folderName);
+
+  const loadSettings = async () => {
+    getLocalBrowserStorage('folderName').then((result) => {
+      result?.folderName && setFolderNameInput(result?.folderName)
+    });
+    getLocalBrowserStorage('tag').then((result) => {
+      result?.tag && setTagInput(result?.tag);
+    });
+  };
   const handleClose = () => {
     setOpen(false);
   };
   const handleOpen = () => {
+    loadSettings();
     setOpen(true);
   };
   const handleSave = () => {
@@ -95,7 +106,7 @@ const PopupOptions: FC<any> = ({
         <Stack
           component="form"
           padding={2}
-          spacing={2}
+          spacing={3}
           noValidate
           autoComplete="off"
         >
@@ -109,7 +120,7 @@ const PopupOptions: FC<any> = ({
           />
           <TextField
             label="Folder Name"
-            helperText="Folder Name specify where to save the history file. It can also help you save history for multiple devices."
+            helperText="Folder Name specifies where to save your history files. It can also help you save history for multiple devices."
             value={folderNameInput}
             onInput={(e) =>
               setFolderNameInput((e.target as HTMLTextAreaElement).value)
