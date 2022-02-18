@@ -14,6 +14,7 @@ import { Button, Typography } from '@mui/material';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
 import * as store from './store';
+import Terms from './terms';
 
 const Popup = () => {
   const [token, setStateToken] = useState('');
@@ -69,18 +70,7 @@ const Popup = () => {
           setOpen={setNotiOpen}
         />
 
-        <Grid item xs={12}>
-          <Typography
-            variant="body1"
-            component="p"
-            fontSize={12}
-            color={'#bbb'}
-          >
-            *Your data is secure. We can't see your history.
-            <br />
-            The only website we connect for you is Google.
-          </Typography>
-        </Grid>
+        <Terms />
       </Grid>
     </ThemeProvider>
   );
