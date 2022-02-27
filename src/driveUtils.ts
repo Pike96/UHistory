@@ -1,16 +1,14 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
-import { auth, cancelAuth } from './authUtils';
+import { auth } from './authUtils';
 import {
-  AxiosMethod,
-  DriveRequestHeader,
   ErrorMessage,
   ErrorType,
   FolderMetadata,
 } from './interfaces';
 import * as store from './store';
 
-export async function doesFileExistInDrive(filename: string): Promise<boolean> {
-  const data = await listDriveFiles(`trashed = false and name = '${filename}'`);
+export async function doesFileExistInDrive(fileName: string, folderName: string): Promise<boolean> {
+  const data = await listDriveFiles(`trashed = false and name = '${fileName}'`);
 
   if (data.error) {
     throw Error(data.error);
@@ -162,7 +160,10 @@ async function fetchDriveApi(axiosPromise: Promise<AxiosResponse<any, any>>) {
           resolve({
             error: errorData,
           });
-        } else {
+        } else if (errorData?.error) {
+          resolve(errorData?.error);
+        }
+        else {
           resolve(null);
         }
       });
