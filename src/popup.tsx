@@ -14,7 +14,7 @@ import { Button, Typography } from '@mui/material';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
 import * as store from './store';
-import Terms from './terms';
+import Terms from './Terms';
 
 const Popup = () => {
   const [token, setStateToken] = useState('');

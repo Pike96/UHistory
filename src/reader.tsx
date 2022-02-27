@@ -7,7 +7,7 @@ import { getLocalBrowserStorage } from './browserUtils';
 import theme from './theme';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
-import Terms from './terms';
+import Terms from './Terms';
 import * as store from './store';
 
 const Reader = () => {
