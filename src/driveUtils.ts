@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, AxiosStatic, Method } from 'axios';
+import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { auth, cancelAuth } from './authUtils';
 import {
   AxiosMethod,
@@ -87,50 +87,61 @@ async function listDriveFiles(q: string) {
     fields: 'nextPageToken, files(id, name)',
   };
 
-  return await fetchDriveApiRetryAuth(
-    axios.get('https://www.googleapis.com/drive/v3/files', {
-      headers: getHeaders(store.getToken()),
-      params,
-    })
-  );
+  return await fetchDriveApiRetryAuth({
+    method: 'get',
+    url: 'https://www.googleapis.com/drive/v3/files',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    params,
+  });
 }
 
 async function createDriveFiles(folderMetadata: FolderMetadata) {
-  return await fetchDriveApiRetryAuth(
-    axios.post(
-      'https://www.googleapis.com/drive/v3/files',
-      {
-        ...folderMetadata,
-      },
-      { headers: getHeaders(store.getToken()) }
-    )
-  );
+  return await fetchDriveApiRetryAuth({
+    method: 'post',
+    url: 'https://www.googleapis.com/drive/v3/files',
+    data: {
+      ...folderMetadata,
+    },
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
 }
 
 async function uploadDriveFile(body: FormData) {
-  return await fetchDriveApiRetryAuth(
-    axios.post(
-      'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
-      body,
-      {
-        headers: {
-          Authorization: `Bearer ${store.getToken()}`,
-        },
-      }
-    )
-  );
+  return await fetchDriveApiRetryAuth({
+    method: 'post',
+    url: 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+    data: body,
+  });
 }
 
-async function fetchDriveApiRetryAuth(
-  axiosPromise: Promise<AxiosResponse<any, any>>
-) {
-  const result = await fetchDriveApi(axiosPromise);
+async function fetchDriveApiRetryAuth(config: AxiosRequestConfig) {
+  setHeaderAuth(config);
+  const result = await fetchDriveApi(axios(config));
   if (result?.error === ErrorType.InvalidToken) {
     await auth({ interactive: false });
-    console.log('Retry auth');
-    return await fetchDriveApi(axiosPromise);
+    setHeaderAuth(config);
+    return await fetchDriveApi(axios(config));
   } else {
     return result;
+  }
+}
+
+function setHeaderAuth(config: AxiosRequestConfig) {
+  const authValue =  `Bearer ${store.getToken()}`
+
+  if (config?.headers) {
+    config.headers.Authorization = authValue;
+  }
+  else {
+    config.headers = {
+      Authorization: authValue,
+    };
   }
 }
 
@@ -160,12 +171,4 @@ async function fetchDriveApi(axiosPromise: Promise<AxiosResponse<any, any>>) {
 
 function isString(data: any) {
   return Object.prototype.toString.call(data) === '[object String]';
-}
-
-function getHeaders(token: string): DriveRequestHeader {
-  return {
-    Authorization: `Bearer ${token}`,
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  };
 }

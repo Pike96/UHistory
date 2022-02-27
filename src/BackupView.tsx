@@ -99,7 +99,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
 
           if (response === fileName) {
             notify({
-              message: `Successfully backuped: ${fileName}.`,
+              message: `Successfully backuped: ${fileName}`,
               severity: 'success',
             });
           } else {

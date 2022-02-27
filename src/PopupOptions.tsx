@@ -37,7 +37,7 @@ const PopupOptions: FC<any> = ({
 
   const loadSettings = async () => {
     getLocalBrowserStorage('folderName').then((result) => {
-      result?.folderName && setFolderNameInput(result?.folderName)
+      result?.folderName && setFolderNameInput(result?.folderName);
     });
     getLocalBrowserStorage('tag').then((result) => {
       result?.tag && setTagInput(result?.tag);
