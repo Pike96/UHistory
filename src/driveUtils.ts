@@ -7,8 +7,8 @@ import {
 } from './interfaces';
 import * as store from './store';
 
-export async function doesFileExistInDrive(fileName: string, folderName: string): Promise<boolean> {
-  const data = await listDriveFiles(`trashed = false and name = '${fileName}'`);
+export async function doesFileExistInDrive(fileName: string, folderId: string): Promise<boolean> {
+  const data = await listDriveFiles(`trashed = false and name = '${fileName}' and '${folderId}' in parents`);
 
   if (data.error) {
     throw Error(data.error);
