@@ -5,8 +5,8 @@ import { Grid } from '@mui/material';
 import CloudIcon from '@mui/icons-material/Cloud';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { auth } from './authUtils';
-import { AuthViewProps, ErrorType, SpecialMessage } from './interfaces';
+import { auth } from '../utils/authUtils';
+import { AuthViewProps, ErrorType, SpecialMessage } from '../common/interfaces';
 
 const AuthView: FC<AuthViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);

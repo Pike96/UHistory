@@ -4,8 +4,8 @@ import {
   setLocalBrowserStorage,
   removeCachedAuthToken,
 } from './browserUtils';
-import { AuthOption, ErrorMessage } from './interfaces';
-import * as store from './store';
+import { AuthOption, ErrorMessage } from '../common/interfaces';
+import * as store from '../common/store';
 
 export function auth(option: AuthOption): Promise<string> {
   return new Promise<string>((resolve) => {

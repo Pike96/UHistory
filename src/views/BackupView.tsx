@@ -6,28 +6,28 @@ import AddToDriveIcon from '@mui/icons-material/AddToDrive';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { BackupViewProps, ErrorType } from './interfaces';
-import { cancelAuth } from './authUtils';
+import { BackupViewProps, ErrorType } from '../common/interfaces';
+import { cancelAuth } from '../utils/authUtils';
 import {
   createFolderInDrive,
   doesFileExistInDrive,
   getFolderIdFromDrive,
   saveHistoryFile,
-} from './driveUtils';
-import SignOut from './SignOut';
+} from '../utils/driveUtils';
+import SignOut from '../components/SignOut';
 import {
   getMonthDiffMoment,
   getMonthName,
   getYearName,
   wait,
-} from './timeUtils';
+} from '../utils/timeUtils';
 import moment from 'moment';
 import {
   getLocalBrowserStorage,
   readBrowserHistory,
   setLocalBrowserStorage,
-} from './browserUtils';
-import PopupOptions from './PopupOptions';
+} from '../utils/browserUtils';
+import PopupOptions from '../components/PopupOptions';
 
 const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);

@@ -3,16 +3,19 @@ import ReactDOM from 'react-dom';
 import { ThemeProvider } from '@emotion/react';
 
 import Grid from '@mui/material/Grid';
-import { getLocalBrowserStorage } from './browserUtils';
-import theme from './theme';
+import { getLocalBrowserStorage } from '../utils/browserUtils';
+import theme from '../common/theme';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
-import Terms from './Terms';
-import * as store from './store';
-import { readHistoryFromDrive } from './driveUtils';
+import Terms from '../components/Terms';
+import * as store from '../common/store';
+import { readHistoryFromDrive } from '../utils/driveUtils';
+import Backdrop from '@mui/material/Backdrop';
 
 const Reader = () => {
   const [token, setStateToken] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [date, setDate] = useState('');
 
   const setToken = (token: string) => {
     store.setToken(token);

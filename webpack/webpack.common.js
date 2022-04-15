@@ -5,10 +5,10 @@ const srcDir = path.join(__dirname, "..", "src");
 
 module.exports = {
     entry: {
-      background: path.join(srcDir, 'background.ts'),
-      reader: path.join(srcDir, 'reader.tsx'),
-      popup: path.join(srcDir, 'popup.tsx'),
-      options: path.join(srcDir, 'options.tsx'),
+      background: path.join(srcDir, 'entries', 'background.ts'),
+      reader: path.join(srcDir, 'entries', 'reader.tsx'),
+      popup: path.join(srcDir, 'entries', 'popup.tsx'),
+      options: path.join(srcDir, 'entries', 'options.tsx'),
     },
     output: {
         path: path.join(__dirname, "../dist/js"),

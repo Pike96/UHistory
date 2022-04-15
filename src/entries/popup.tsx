@@ -4,17 +4,17 @@ import { ThemeProvider } from '@emotion/react';
 
 import Grid from '@mui/material/Grid';
 
-import theme from './theme';
-import AuthView from './AuthView';
-import BackupView from './BackupView';
-import Notification from './Notification';
-import { NotificationData, SpecialMessage } from './interfaces';
-import { getLocalBrowserStorage } from './browserUtils';
+import theme from '../common/theme';
+import AuthView from '../views/AuthView';
+import BackupView from '../views/BackupView';
+import Notification from '../components/Notification';
+import { NotificationData, SpecialMessage } from '../common/interfaces';
+import { getLocalBrowserStorage } from '../utils/browserUtils';
 import { Button, Typography } from '@mui/material';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
-import * as store from './store';
-import Terms from './Terms';
+import * as store from '../common/store';
+import Terms from '../components/Terms';
 
 const Popup = () => {
   const [token, setStateToken] = useState('');

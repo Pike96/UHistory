@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { auth } from './authUtils';
-import { ErrorMessage, ErrorType, FolderMetadata } from './interfaces';
-import * as store from './store';
+import { ErrorMessage, ErrorType, FolderMetadata } from '../common/interfaces';
+import * as store from '../common/store';
 
 export async function doesFileExistInDrive(
   fileName: string,
@@ -36,28 +36,6 @@ export async function readHistoryFromDrive() {
     countMap: flatCountMap(countMap),
     historyMap,
   };
-}
-
-function flatCountMap(map: Map<string, any>) {
-  return Array.from(map, ([date, count]) => ({
-    date: new Date(date),
-    count,
-  })).sort((a: any, b: any) => a.date - b.date);
-}
-
-function getDateString(timestamp: number) {
-  const date = new Date(timestamp);
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
-  return date.toLocaleDateString('en-US', options);
-}
-
-function getDateFromDateString(timestamp: number) {
-  return new Date(getDateString(timestamp));
 }
 
 export async function getFolderIdFromDrive(
@@ -237,4 +215,26 @@ async function fetchDriveApi(axiosPromise: Promise<AxiosResponse<any, any>>) {
 
 function isString(data: any) {
   return Object.prototype.toString.call(data) === '[object String]';
+}
+
+function flatCountMap(map: Map<string, any>) {
+  return Array.from(map, ([date, count]) => ({
+    date: new Date(date),
+    count,
+  })).sort((a: any, b: any) => a.date - b.date);
+}
+
+function getDateString(timestamp: number) {
+  const date = new Date(timestamp);
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
+  return date.toLocaleDateString('en-US', options);
+}
+
+function getDateFromDateString(timestamp: number) {
+  return new Date(getDateString(timestamp));
 }

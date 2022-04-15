@@ -10,7 +10,7 @@ import {
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { SignOutProps } from './interfaces';
+import { SignOutProps } from '../common/interfaces';
 
 const SignOut: FC<SignOutProps> = ({ loading, signOut }) => {
   const [open, setOpen] = React.useState(false);
