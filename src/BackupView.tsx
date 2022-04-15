@@ -76,7 +76,10 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const backupFile = async () => {
     try {
       let folderId = await getFolderIdFromDrive(folderName);
-      if (folderId && await doesFileExistInDrive(fileName, folderId as string)) {
+      if (
+        folderId &&
+        (await doesFileExistInDrive(fileName, folderId as string))
+      ) {
         notify({
           message: `Backup already exists: ${fileName}. No need to backup again.`,
           severity: 'info',

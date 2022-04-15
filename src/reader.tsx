@@ -9,6 +9,7 @@ import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
 import Terms from './Terms';
 import * as store from './store';
+import { readHistoryFromDrive } from './driveUtils';
 
 const Reader = () => {
   const [token, setStateToken] = useState('');
@@ -18,11 +19,18 @@ const Reader = () => {
     setStateToken(token);
   };
 
+  const read = async () => {
+    const { countMap, historyMap } = await readHistoryFromDrive();
+    console.log("🚀 ~ file: reader.tsx ~ line 24 ~ read ~ countMap", countMap)
+    console.log("🚀 ~ file: reader.tsx ~ line 24 ~ read ~ historyMap", historyMap)
+  };
+
   useEffect(() => {
     if (token) return;
 
     getLocalBrowserStorage('accessToken').then(({ accessToken }) => {
       setToken(accessToken);
+      read();
     });
   }, [token]);
 
