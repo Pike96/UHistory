@@ -11,21 +11,35 @@ import Terms from '../components/Terms';
 import * as store from '../common/store';
 import { readHistoryFromDrive } from '../utils/driveUtils';
 import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import DatePicker from '../components/DatePicker';
 
 const Reader = () => {
   const [token, setStateToken] = useState('');
   const [loading, setLoading] = useState(true);
   const [date, setDate] = useState('');
+  const [countsData, setCountsData] = useState({
+    map: new Map(),
+    maxCount: 0,
+  });
 
   const setToken = (token: string) => {
     store.setToken(token);
     setStateToken(token);
   };
 
-  const read = async () => {
-    const { countMap, historyMap } = await readHistoryFromDrive();
-    console.log("🚀 ~ file: reader.tsx ~ line 24 ~ read ~ countMap", countMap)
-    console.log("🚀 ~ file: reader.tsx ~ line 24 ~ read ~ historyMap", historyMap)
+  const loadData = async () => {
+    const data = await readHistoryFromDrive();
+    setCountsData(data.countsData);
+    console.log(
+      '🚀 ~ file: reader.tsx ~ line 24 ~ read ~ data.countsData',
+      data.countsData
+    );
+    console.log(
+      '🚀 ~ file: reader.tsx ~ line 24 ~ read ~ data.historyMap',
+      data.historyMap
+    );
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -33,7 +47,7 @@ const Reader = () => {
 
     getLocalBrowserStorage('accessToken').then(({ accessToken }) => {
       setToken(accessToken);
-      read();
+      loadData();
     });
   }, [token]);
 
@@ -43,14 +57,27 @@ const Reader = () => {
         container
         margin={'auto'}
         paddingTop={2}
-        maxWidth={1024}
+        maxWidth={1360}
         spacing={3}
         alignItems={'center'}
+        justifyContent={'center'}
         textAlign={'center'}
       >
-        {token}
+        <Grid container spacing={2}>
+          <Grid container item xs={3} direction="column">
+            <DatePicker countsData={countsData} setDate={setDate} />
+          </Grid>
+        </Grid>
+        <Grid container item xs={9} direction="column"></Grid>
+
         <Terms />
       </Grid>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </ThemeProvider>
   );
 };

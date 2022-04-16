@@ -2,6 +2,7 @@ import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { auth } from './authUtils';
 import { ErrorMessage, ErrorType, FolderMetadata } from '../common/interfaces';
 import * as store from '../common/store';
+import { getDateStringFromTimestamp } from './timeUtils';
 
 export async function doesFileExistInDrive(
   fileName: string,
@@ -21,11 +22,14 @@ export async function doesFileExistInDrive(
 export async function readHistoryFromDrive() {
   const files = await listAllHistoryFiles();
   const countMap = new Map();
+  let maxCount = -1;
   const historyMap = new Map();
   for (const file of files) {
     for (const item of await getFileData(file.id)) {
-      const date = getDateString(item.lastVisitTime);
-      countMap.set(date, countMap.has(date) ? countMap.get(date) + 1 : 0);
+      const date = getDateStringFromTimestamp(item.lastVisitTime);
+      const newCount = countMap.has(date) ? countMap.get(date) + 1 : 0;
+      maxCount = Math.max(maxCount, newCount);
+      countMap.set(date, newCount);
       historyMap.set(
         date,
         historyMap.has(date) ? [...historyMap.get(date), item] : []
@@ -33,7 +37,10 @@ export async function readHistoryFromDrive() {
     }
   }
   return {
-    countMap: flatCountMap(countMap),
+    countsData: {
+      map: countMap,
+      maxCount,
+    },
     historyMap,
   };
 }
@@ -222,19 +229,4 @@ function flatCountMap(map: Map<string, any>) {
     date: new Date(date),
     count,
   })).sort((a: any, b: any) => a.date - b.date);
-}
-
-function getDateString(timestamp: number) {
-  const date = new Date(timestamp);
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
-  return date.toLocaleDateString('en-US', options);
-}
-
-function getDateFromDateString(timestamp: number) {
-  return new Date(getDateString(timestamp));
 }
