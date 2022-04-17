@@ -35,7 +35,6 @@
 
   "host_permissions": [
     "https://accounts.google.com/*",
-    "https://www.googleapis.com/*",
-    "<all_urls>"
+    "https://www.googleapis.com/*"
   ]
 }

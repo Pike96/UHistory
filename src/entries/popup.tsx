@@ -10,7 +10,6 @@ import BackupView from '../views/BackupView';
 import Notification from '../components/Notification';
 import { NotificationData, SpecialMessage } from '../common/interfaces';
 import { getLocalBrowserStorage } from '../utils/browserUtils';
-import { Button, Typography } from '@mui/material';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
 import * as store from '../common/store';

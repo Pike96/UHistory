@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -27,22 +27,34 @@ const HEATMAP_COLOR_SCALES = [
 const CustomPickersDay = styled(PickersDay, {
   shouldForwardProp: (prop) => prop !== 'colorScale',
 })<CustomPickerDayProps>(
-  ({ theme, selected, outsideCurrentMonth, colorScale }) => ({
-    ...(!outsideCurrentMonth && {
-      backgroundColor: HEATMAP_COLOR_SCALES[colorScale],
-      color: theme.palette.common.white,
-      '&:hover, &:focus': {
-        backgroundColor: HEATMAP_COLOR_SCALES[colorScale],
-        borderRadius: 20,
+  ({ theme, selected, outsideCurrentMonth, colorScale }) => {
+    const backgroundColor = HEATMAP_COLOR_SCALES[colorScale];
+    return {
+      ...(!outsideCurrentMonth && {
+        backgroundColor,
+        color: theme.palette.common.black,
+        '&:hover, &:focus': {
+          backgroundColor,
+        },
+      }),
+      ...(colorScale > 2 && {
+        color: theme.palette.common.white,
+      }),
+      [`&&.${pickersDayClasses.selected}`]: {
+        backgroundColor,
+        color: theme.palette.common.black,
+        ...(colorScale > 2 && {
+          color: theme.palette.common.white,
+        }),
       },
-    }),
-    [`&&.${pickersDayClasses.selected}`]: {
-      backgroundColor: HEATMAP_COLOR_SCALES[colorScale],
-    },
-    ...(!selected && {
-      borderRadius: 0,
-    }),
-  })
+      ...(!selected && {
+        borderRadius: 0,
+      }),
+      [`&&.${pickersDayClasses.disabled}`]: {
+        backgroundColor: theme.palette.common.white,
+      },
+    };
+  }
 ) as React.ComponentType<CustomPickerDayProps>;
 
 export default function DatePicker({ countsData, setDate }: any) {
@@ -69,6 +81,7 @@ export default function DatePicker({ countsData, setDate }: any) {
         title={`${dateString} : ${countsData.map.get(dateString) || 0}`}
         placement="top"
         arrow
+        followCursor
         key={pickersDayProps.key}
       >
         <CustomPickersDay
@@ -85,6 +98,7 @@ export default function DatePicker({ countsData, setDate }: any) {
       <StaticDatePicker<Date>
         orientation="portrait"
         openTo="day"
+        disableFuture
         value={value}
         onChange={(newValue) => {
           setValue(newValue);

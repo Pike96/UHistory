@@ -48,7 +48,7 @@ export interface ErrorMessage {
 }
 
 export enum ErrorType {
-  SignInFailed = "We can't sign in to your drive. You may have cancelled it. Please try again later.",
+  SignInFailed = "We can't sign in to your drive. You may have cancelled it. Please also check your browser settings",
   InvalidToken = "We can't backup right now. Please try to sign in again.",
 }
 

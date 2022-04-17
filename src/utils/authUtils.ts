@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {
-  getLocalBrowserStorage,
   setLocalBrowserStorage,
   removeCachedAuthToken,
 } from './browserUtils';
