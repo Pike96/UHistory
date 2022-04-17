@@ -15,7 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import DatePicker from '../components/DatePicker';
 import HistoryList from '../components/HistoryList';
 import { getDateStringFromDate } from '../utils/timeUtils';
-import { Box, styled } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 
 const Container = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -44,23 +44,15 @@ const Reader = () => {
     const data = await readHistoryFromDrive();
     setCountsData(data.countsData);
     setHistoryMap(data.historyMap);
-    console.log(
-      '🚀 ~ file: reader.tsx ~ line 24 ~ read ~ data.countsData',
-      data.countsData
-    );
-    console.log(
-      '🚀 ~ file: reader.tsx ~ line 24 ~ read ~ data.historyMap',
-      data.historyMap
-    );
-    setLoading(false);
   };
 
   useEffect(() => {
     if (token) return;
 
-    getLocalBrowserStorage('accessToken').then(({ accessToken }) => {
+    getLocalBrowserStorage('accessToken').then(async ({ accessToken }) => {
       setToken(accessToken);
-      loadData();
+      (await accessToken) && loadData();
+      setLoading(false);
     });
   }, [token]);
 
@@ -77,14 +69,25 @@ const Reader = () => {
         justifyContent={'center'}
         textAlign={'center'}
       >
-        <Container>
-          <DatePicker countsData={countsData} setDate={setDate} />
-          <HistoryList dailyHistory={historyMap.get(date)} />
-        </Container>
+        {token ? (
+          <>
+            <Container>
+              <DatePicker countsData={countsData} setDate={setDate} />
+              <HistoryList dailyHistory={historyMap.get(date)} />
+            </Container>
 
-        <Grid container item spacing={2}>
-          <Terms />
-        </Grid>
+            <Grid container item spacing={2}>
+              <Terms />
+            </Grid>
+          </>
+        ) : (
+          <Typography
+            variant="h5"
+            sx={{ width: '100%', bgcolor: 'background.paper' }}
+          >
+            Not signed in. Please use popup to sign in to your Google account.
+          </Typography>
+        )}
       </Grid>
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

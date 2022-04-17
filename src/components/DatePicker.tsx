@@ -84,11 +84,13 @@ export default function DatePicker({ countsData, setDate }: any) {
         followCursor
         key={pickersDayProps.key}
       >
-        <CustomPickersDay
-          {...pickersDayProps}
-          disableMargin
-          colorScale={colorScale}
-        />
+        <span>
+          <CustomPickersDay
+            {...pickersDayProps}
+            disableMargin
+            colorScale={colorScale}
+          />
+        </span>
       </Tooltip>
     );
   };
