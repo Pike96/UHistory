@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
 
 import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import AddToDriveIcon from '@mui/icons-material/AddToDrive';

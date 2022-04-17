@@ -10,6 +10,7 @@ import {
   pickersDayClasses,
 } from '@mui/x-date-pickers/PickersDay';
 import { getDateStringFromDate } from '../utils/timeUtils';
+import { Tooltip } from '@mui/material';
 
 type CustomPickerDayProps = PickersDayProps<Date> & {
   colorScale: number;
@@ -47,13 +48,12 @@ const CustomPickersDay = styled(PickersDay, {
 export default function DatePicker({ countsData, setDate }: any) {
   const [value, setValue] = useState<Date | null>(new Date());
 
-  const setColorScale = (day: Date, countsData: any) => {
+  const setColorScale = (dateString: string, countsData: any) => {
     let colorScale = 0;
     const map = countsData.map;
-    const key = getDateStringFromDate(day);
     const scaleSize = HEATMAP_COLOR_SCALES.length;
-    if (countsData.maxCount > 0 && map.has(key)) {
-      const count = map.get(key);
+    if (countsData.maxCount > 0 && map.has(dateString)) {
+      const count = map.get(dateString);
       const interval = Math.ceil((countsData.maxCount + 1) / (scaleSize - 1));
       colorScale = Math.floor(count / interval) + 1;
     }
@@ -61,14 +61,22 @@ export default function DatePicker({ countsData, setDate }: any) {
   };
 
   const getDayElement = (day: Date, pickersDayProps: PickersDayProps<Date>) => {
-    const colorScale = setColorScale(day, countsData);
+    const dateString = getDateStringFromDate(day);
+    const colorScale = setColorScale(dateString, countsData);
 
     return (
-      <CustomPickersDay
-        {...pickersDayProps}
-        disableMargin
-        colorScale={colorScale}
-      />
+      <Tooltip
+        title={`${dateString} : ${countsData.map.get(dateString) || 0}`}
+        placement="top"
+        arrow
+        key={pickersDayProps.key}
+      >
+        <CustomPickersDay
+          {...pickersDayProps}
+          disableMargin
+          colorScale={colorScale}
+        />
+      </Tooltip>
     );
   };
 
@@ -80,7 +88,7 @@ export default function DatePicker({ countsData, setDate }: any) {
         value={value}
         onChange={(newValue) => {
           setValue(newValue);
-          setDate(newValue);
+          setDate(getDateStringFromDate(newValue));
         }}
         renderInput={(params) => <TextField {...params} />}
         renderDay={(day, _selectedDates, pickersDayProps) =>

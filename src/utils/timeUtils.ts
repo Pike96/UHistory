@@ -24,12 +24,23 @@ export function getDateStringFromTimestamp(timestamp: number) {
   return getDateStringFromDate(new Date(timestamp));
 }
 
-export function getDateStringFromDate(date: Date) {
+export function getDateStringFromDate(date: Date | null) {
   const options: Intl.DateTimeFormatOptions = {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   };
-  return date.toLocaleDateString('en-US', options);
+  return date?.toLocaleDateString('default', options) || '';
+}
+
+export function getTimeFromTimeStamp(timestamp: number) {
+  const date = new Date(timestamp);
+  const options: Intl.DateTimeFormatOptions = {
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  };
+  return date?.toLocaleTimeString('en-US', options) || '';
 }

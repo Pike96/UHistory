@@ -13,15 +13,27 @@ import { readHistoryFromDrive } from '../utils/driveUtils';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import DatePicker from '../components/DatePicker';
+import HistoryList from '../components/HistoryList';
+import { getDateStringFromDate } from '../utils/timeUtils';
+import { Box, styled } from '@mui/material';
+
+const Container = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+  },
+}));
 
 const Reader = () => {
   const [token, setStateToken] = useState('');
   const [loading, setLoading] = useState(true);
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(getDateStringFromDate(new Date()));
   const [countsData, setCountsData] = useState({
     map: new Map(),
     maxCount: 0,
   });
+  const [historyMap, setHistoryMap] = useState(new Map());
 
   const setToken = (token: string) => {
     store.setToken(token);
@@ -31,6 +43,7 @@ const Reader = () => {
   const loadData = async () => {
     const data = await readHistoryFromDrive();
     setCountsData(data.countsData);
+    setHistoryMap(data.historyMap);
     console.log(
       '🚀 ~ file: reader.tsx ~ line 24 ~ read ~ data.countsData',
       data.countsData
@@ -57,20 +70,21 @@ const Reader = () => {
         container
         margin={'auto'}
         paddingTop={2}
+        width={'100%'}
         maxWidth={1360}
         spacing={3}
         alignItems={'center'}
         justifyContent={'center'}
         textAlign={'center'}
       >
-        <Grid container spacing={2}>
-          <Grid container item xs={3} direction="column">
-            <DatePicker countsData={countsData} setDate={setDate} />
-          </Grid>
-        </Grid>
-        <Grid container item xs={9} direction="column"></Grid>
+        <Container>
+          <DatePicker countsData={countsData} setDate={setDate} />
+          <HistoryList dailyHistory={historyMap.get(date)} />
+        </Container>
 
-        <Terms />
+        <Grid container item spacing={2}>
+          <Terms />
+        </Grid>
       </Grid>
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

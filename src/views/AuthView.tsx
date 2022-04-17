@@ -1,5 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
+import React, { FC, useState } from 'react';
 
 import { Grid } from '@mui/material';
 import CloudIcon from '@mui/icons-material/Cloud';

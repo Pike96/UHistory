@@ -27,12 +27,12 @@ export async function readHistoryFromDrive() {
   for (const file of files) {
     for (const item of await getFileData(file.id)) {
       const date = getDateStringFromTimestamp(item.lastVisitTime);
-      const newCount = countMap.has(date) ? countMap.get(date) + 1 : 0;
+      const newCount = (countMap.has(date) ? countMap.get(date) : 0) + 1;
       maxCount = Math.max(maxCount, newCount);
       countMap.set(date, newCount);
       historyMap.set(
         date,
-        historyMap.has(date) ? [...historyMap.get(date), item] : []
+        historyMap.has(date) ? [...historyMap.get(date), item] : [item]
       );
     }
   }
@@ -41,7 +41,7 @@ export async function readHistoryFromDrive() {
       map: countMap,
       maxCount,
     },
-    historyMap,
+    historyMap: sortHistoryMap(historyMap),
   };
 }
 
@@ -229,4 +229,15 @@ function flatCountMap(map: Map<string, any>) {
     date: new Date(date),
     count,
   })).sort((a: any, b: any) => a.date - b.date);
+}
+
+function sortHistoryMap(map: Map<string, any>) {
+  const newMap = new Map();
+  for (var [date, historyItems] of map.entries()) {
+    newMap.set(
+      date,
+      historyItems.sort((a: any, b: any) => a.lastVisitTime - b.lastVisitTime)
+    );
+  }
+  return newMap;
 }
