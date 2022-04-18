@@ -3,9 +3,9 @@ import { backup, generateFilename } from '../utils/backupUtils';
 import { getLocalBrowserStorage } from '../utils/browserUtils';
 import { getMonthDiffMoment, wait } from '../utils/timeUtils';
 
-init();
-
 const MINUTES_IN_MILLISECONDS = 60 * 1000;
+
+init();
 
 function init() {
   setInterval(updateTokenSilently, MINUTES_IN_MILLISECONDS);
