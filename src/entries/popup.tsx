@@ -7,21 +7,17 @@ import Grid from '@mui/material/Grid';
 import theme from '../common/theme';
 import AuthView from '../views/AuthView';
 import BackupView from '../views/BackupView';
-import Notification from '../components/Notification';
-import { NotificationData, SpecialMessage } from '../common/interfaces';
+
 import { getLocalBrowserStorage } from '../utils/browserUtils';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
 import * as store from '../common/store';
 import Terms from '../components/Terms';
+import useNotification from '../hooks/useNotification';
 
 const Popup = () => {
   const [token, setStateToken] = useState('');
-  const [notification, setNotification] = useState({
-    message: '',
-    severity: 'info',
-  } as NotificationData);
-  const [notiOpen, setNotiOpen] = useState(false);
+  const [, notify, NotificationWrapper] = useNotification();
 
   const setToken = (token: string) => {
     store.setToken(token);
@@ -35,15 +31,6 @@ const Popup = () => {
       setToken(accessToken);
     });
   }, [token]);
-
-  const notify = (_notification: NotificationData) => {
-    if (_notification.message === SpecialMessage.ForceClose) {
-      setNotiOpen(false);
-      return;
-    }
-    setNotification(_notification);
-    setNotiOpen(true);
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -62,13 +49,7 @@ const Popup = () => {
           <AuthView notify={notify} setToken={setToken} />
         )}
 
-        <Notification
-          message={notification.message}
-          severity={notification.severity}
-          open={notiOpen}
-          setOpen={setNotiOpen}
-        />
-
+        <NotificationWrapper />
         <Terms />
       </Grid>
     </ThemeProvider>

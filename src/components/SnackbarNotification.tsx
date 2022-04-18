@@ -3,7 +3,7 @@ import React, { FC, SyntheticEvent } from 'react';
 import { Alert, Snackbar, SnackbarCloseReason } from '@mui/material';
 import { NotificationProps } from '../common/interfaces';
 
-const Notification: FC<NotificationProps> = ({
+const SnackbarNotification: FC<NotificationProps> = ({
   message,
   severity,
   open,
@@ -34,4 +34,4 @@ const Notification: FC<NotificationProps> = ({
   );
 };
 
-export default Notification;
+export default SnackbarNotification;

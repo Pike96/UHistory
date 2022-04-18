@@ -21,12 +21,9 @@ import {
   wait,
 } from '../utils/timeUtils';
 import moment from 'moment';
-import {
-  getLocalBrowserStorage,
-  readBrowserHistory,
-  setLocalBrowserStorage,
-} from '../utils/browserUtils';
+import { readBrowserHistory } from '../utils/browserUtils';
 import PopupOptions from '../components/PopupOptions';
+import { useFolderName, useTag } from '../hooks/optionsHooks';
 
 const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);
@@ -35,8 +32,8 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
     getMonthDiffMoment(monthDiff)
   );
   const [fileName, setFileName] = useState('');
-  const [folderName, setFolderName] = useState('UHistoryBackup');
-  const [tag, setTag] = useState('');
+  const [folderName, updateFolderName] = useFolderName();
+  const [tag, updateTag] = useTag();
 
   const updateFilename = () => {
     setFileName(
@@ -49,27 +46,6 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const updateMonthDiff = (_monthDiff: number) => {
     setMonthDiff(_monthDiff);
     setMonthDiffMoment(getMonthDiffMoment(_monthDiff));
-  };
-
-  const updateFolderName = async (_folderName: string) => {
-    setFolderName(_folderName);
-    await setLocalBrowserStorage({ folderName: _folderName });
-  };
-
-  const updateTag = async (_tag: string) => {
-    setTag(_tag);
-    await setLocalBrowserStorage({ tag: _tag });
-  };
-
-  const loadSettings = async () => {
-    getLocalBrowserStorage('folderName').then((result) => {
-      result?.folderName == undefined
-        ? updateFolderName('UHistoryBackup')
-        : setFolderName(result?.folderName);
-    });
-    getLocalBrowserStorage('tag').then((result) => {
-      result?.tag === undefined ? updateTag('') : setTag(result?.tag);
-    });
   };
 
   const backupFile = async () => {
@@ -142,10 +118,6 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
       });
     }
   };
-
-  useEffect(() => {
-    loadSettings();
-  }, []);
 
   useEffect(() => {
     updateFilename();
