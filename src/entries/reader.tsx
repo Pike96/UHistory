@@ -3,12 +3,10 @@ import ReactDOM from 'react-dom';
 import { ThemeProvider } from '@emotion/react';
 
 import Grid from '@mui/material/Grid';
-import { getLocalBrowserStorage } from '../utils/browserUtils';
 import theme from '../common/theme';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
 import Terms from '../components/Terms';
-import * as store from '../common/store';
 import { readHistoryFromDrive } from '../utils/driveUtils';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -16,6 +14,7 @@ import DatePicker from '../components/DatePicker';
 import HistoryList from '../components/HistoryList';
 import { getDateStringFromDate } from '../utils/timeUtils';
 import { Box, styled, Typography } from '@mui/material';
+import useToken from '../hooks/useToken';
 
 const Container = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -26,7 +25,7 @@ const Container = styled(Box)(({ theme }) => ({
 }));
 
 const Reader = () => {
-  const [token, setStateToken] = useState('');
+  const [token] = useToken();
   const [loading, setLoading] = useState(true);
   const [date, setDate] = useState(getDateStringFromDate(new Date()));
   const [countsData, setCountsData] = useState({
@@ -35,25 +34,15 @@ const Reader = () => {
   });
   const [historyMap, setHistoryMap] = useState(new Map());
 
-  const setToken = (token: string) => {
-    store.setToken(token);
-    setStateToken(token);
-  };
-
   const loadData = async () => {
     const data = await readHistoryFromDrive();
     setCountsData(data.countsData);
     setHistoryMap(data.historyMap);
+    setLoading(false);
   };
 
   useEffect(() => {
-    if (token) return;
-
-    getLocalBrowserStorage('accessToken').then(async ({ accessToken }) => {
-      setToken(accessToken);
-      (await accessToken) && loadData();
-      setLoading(false);
-    });
+    loadData();
   }, [token]);
 
   return (

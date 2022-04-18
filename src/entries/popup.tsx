@@ -8,29 +8,15 @@ import theme from '../common/theme';
 import AuthView from '../views/AuthView';
 import BackupView from '../views/BackupView';
 
-import { getLocalBrowserStorage } from '../utils/browserUtils';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
-import * as store from '../common/store';
 import Terms from '../components/Terms';
 import useNotification from '../hooks/useNotification';
+import useToken from '../hooks/useToken';
 
 const Popup = () => {
-  const [token, setStateToken] = useState('');
   const [, notify, NotificationWrapper] = useNotification();
-
-  const setToken = (token: string) => {
-    store.setToken(token);
-    setStateToken(token);
-  };
-
-  useEffect(() => {
-    if (token) return;
-
-    getLocalBrowserStorage('accessToken').then(({ accessToken }) => {
-      setToken(accessToken);
-    });
-  }, [token]);
+  const [token, setToken] = useToken();
 
   return (
     <ThemeProvider theme={theme}>

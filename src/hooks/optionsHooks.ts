@@ -11,16 +11,12 @@ export function useFolderName(): [string, Function] {
     await setLocalBrowserStorage({ folderName: _folderName });
   };
 
-  const load = async () => {
+  useEffect(() => {
     getLocalBrowserStorage('folderName').then((result) => {
       result?.folderName == undefined
         ? updateFolderName('UHistoryBackup')
         : setFolderName(result?.folderName);
     });
-  };
-
-  useEffect(() => {
-    load();
   }, []);
 
   return [folderName, updateFolderName];
@@ -33,14 +29,10 @@ export function useTag(): [string, Function] {
     await setLocalBrowserStorage({ tag: _tag });
   };
 
-  const load = async () => {
+  useEffect(() => {
     getLocalBrowserStorage('tag').then((result) => {
       result?.tag === undefined ? updateTag('') : setTag(result?.tag);
     });
-  };
-
-  useEffect(() => {
-    load();
   }, []);
 
   return [tag, updateTag];
