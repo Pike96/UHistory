@@ -8,6 +8,9 @@ export function auth(option: AuthOption): Promise<string> {
     try {
       chrome.identity.getAuthToken(option, async function (token: string) {
         await setLocalBrowserStorage({ accessToken: token });
+        await setLocalBrowserStorage({
+          tokenLastUpdated: new Date().getTime(),
+        });
         store.setToken(token);
         resolve(token);
       });

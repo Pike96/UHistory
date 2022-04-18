@@ -2,7 +2,7 @@ import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { auth } from './authUtils';
 import { ErrorMessage, ErrorType, FolderMetadata } from '../common/interfaces';
 import * as store from '../common/store';
-import { getDateStringFromTimestamp } from './timeUtils';
+import { getDateStringFromTimestamp, wait } from './timeUtils';
 
 export async function doesFileExistInDrive(
   fileName: string,
@@ -174,6 +174,7 @@ async function fetchDriveApiRetryAuth(config: AxiosRequestConfig) {
   if (result?.error === ErrorType.InvalidToken) {
     console.log('Error occurs, ', store.getToken());
     await auth({ interactive: false });
+    await wait(900);
     console.log('auth interactive false, ', store.getToken());
     setHeaderAuth(config);
     return await fetchDriveApi(axios(config));

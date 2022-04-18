@@ -7,23 +7,13 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { BackupViewProps, ErrorType } from '../common/interfaces';
 import { cancelAuth } from '../utils/authUtils';
-import {
-  createFolderInDrive,
-  doesFileExistInDrive,
-  getFolderIdFromDrive,
-  saveHistoryFile,
-} from '../utils/driveUtils';
+
 import SignOut from '../components/SignOut';
-import {
-  getMonthDiffMoment,
-  getMonthName,
-  getYearName,
-  wait,
-} from '../utils/timeUtils';
+import { getMonthDiffMoment, getMonthName, wait } from '../utils/timeUtils';
 import moment from 'moment';
-import { readBrowserHistory } from '../utils/browserUtils';
 import PopupOptions from '../components/PopupOptions';
 import { useFolderName, useTag } from '../hooks/optionsHooks';
+import { backup, generateFilename } from '../utils/backupUtils';
 
 const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);
@@ -36,11 +26,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const [tag, updateTag] = useTag();
 
   const updateFilename = () => {
-    setFileName(
-      `UHB${getYearName(monthDiffMoment)}${getMonthName(
-        monthDiffMoment
-      )}${tag}.json`
-    );
+    setFileName(generateFilename(monthDiffMoment, tag));
   };
 
   const updateMonthDiff = (_monthDiff: number) => {
@@ -50,45 +36,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
 
   const backupFile = async () => {
     try {
-      let folderId = await getFolderIdFromDrive(folderName);
-      if (
-        folderId &&
-        (await doesFileExistInDrive(fileName, folderId as string))
-      ) {
-        notify({
-          message: `Backup already exists: ${fileName}. No need to backup again.`,
-          severity: 'info',
-        });
-      } else {
-        folderId ||= await createFolderInDrive(folderName);
-        const historyData = await readBrowserHistory(monthDiffMoment);
-
-        if (historyData?.length === 0) {
-          notify({
-            message: `No history found for the selected month`,
-            severity: 'warning',
-          });
-        } else {
-          const response = await saveHistoryFile(
-            folderId as string,
-            fileName,
-            historyData
-          );
-
-          if (response === fileName) {
-            notify({
-              message: `Successfully backuped: ${fileName}`,
-              severity: 'success',
-            });
-          } else {
-            notify({
-              message:
-                response?.error || 'Unknown error. Please try again later',
-              severity: 'error',
-            });
-          }
-        }
-      }
+      await backup(folderName, fileName, monthDiffMoment, notify);
     } catch (error: any) {
       if (error.message === ErrorType.InvalidToken) {
         await signOut(ErrorType.InvalidToken);
