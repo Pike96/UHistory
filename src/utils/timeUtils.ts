@@ -42,5 +42,5 @@ export function getTimeFromTimeStamp(timestamp: number) {
     minute: '2-digit',
     second: '2-digit',
   };
-  return date?.toLocaleTimeString('en-US', options) || '';
+  return date?.toLocaleTimeString('default', options) || '';
 }

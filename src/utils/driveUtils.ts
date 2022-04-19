@@ -225,13 +225,6 @@ function isString(data: any) {
   return Object.prototype.toString.call(data) === '[object String]';
 }
 
-function flatCountMap(map: Map<string, any>) {
-  return Array.from(map, ([date, count]) => ({
-    date: new Date(date),
-    count,
-  })).sort((a: any, b: any) => a.date - b.date);
-}
-
 function sortHistoryMap(map: Map<string, any>) {
   const newMap = new Map();
   for (var [date, historyItems] of map.entries()) {
