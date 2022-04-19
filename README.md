@@ -4,7 +4,7 @@
 
 ![tile1400](https://github.com/Pike96/UHistory/raw/master/pic/tile1400.png) [![](/pic/chrome-web-store.png "U History - Chrome Web Store")][webstore] <-- Click to get it
 
-U means Unlimited! Chrome only saves 90 days of history. Use this extension and save your history on Google Drive forever!
+U means Unlimited! Chrome only saves 90 days of history. Use this extension and save your history on your own Google Drive forever!
 
 ### Features
 
