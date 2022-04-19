@@ -1,7 +1,8 @@
-import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
-import { auth } from './authUtils';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+
 import { ErrorMessage, ErrorType, FolderMetadata } from '../common/interfaces';
 import * as store from '../common/store';
+import { auth } from './authUtils';
 import { getDateStringFromTimestamp, wait } from './timeUtils';
 
 export async function doesFileExistInDrive(
@@ -227,7 +228,7 @@ function isString(data: any) {
 
 function sortHistoryMap(map: Map<string, any>) {
   const newMap = new Map();
-  for (var [date, historyItems] of map.entries()) {
+  for (const [date, historyItems] of map.entries()) {
     newMap.set(
       date,
       historyItems.sort((a: any, b: any) => a.lastVisitTime - b.lastVisitTime)

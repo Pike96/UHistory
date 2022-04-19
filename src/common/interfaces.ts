@@ -1,5 +1,6 @@
-import { AlertColor } from '@mui/material';
 import { AxiosRequestHeaders } from 'axios';
+
+import { AlertColor } from '@mui/material';
 
 export interface AuthOption {
   interactive: boolean;

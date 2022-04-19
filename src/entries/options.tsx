@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+
 import { ThemeProvider } from '@emotion/react';
+
 import theme from '../common/theme';
 import CommonOptions from '../components/CommonOptions';
 import { useFolderName, useTag } from '../hooks/optionsHooks';

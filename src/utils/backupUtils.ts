@@ -1,11 +1,11 @@
-import { getMonthName, getYearName } from './timeUtils';
+import { readBrowserHistory } from '../utils/browserUtils';
 import {
   createFolderInDrive,
   doesFileExistInDrive,
   getFolderIdFromDrive,
   saveHistoryFile,
 } from '../utils/driveUtils';
-import { readBrowserHistory } from '../utils/browserUtils';
+import { getMonthName, getYearName } from './timeUtils';
 
 export async function backup(
   folderName: string,

@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
-import { ThemeProvider } from '@emotion/react';
-
-import Grid from '@mui/material/Grid';
-import theme from '../common/theme';
 import '@fontsource/ibm-plex-sans/500.css';
 import '@fontsource/ibm-plex-sans/700.css';
-import Terms from '../components/Terms';
-import { readHistoryFromDrive } from '../utils/driveUtils';
+
+import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+
+import { ThemeProvider } from '@emotion/react';
+import { Box, styled, Typography } from '@mui/material';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
+
+import theme from '../common/theme';
 import DatePicker from '../components/DatePicker';
 import HistoryList from '../components/HistoryList';
-import { getDateStringFromDate } from '../utils/timeUtils';
-import { Box, styled, Typography } from '@mui/material';
+import Terms from '../components/Terms';
 import useToken from '../hooks/useToken';
+import { readHistoryFromDrive } from '../utils/driveUtils';
+import { getDateStringFromDate } from '../utils/timeUtils';
 
 const Container = styled(Box)(({ theme }) => ({
   display: 'flex',

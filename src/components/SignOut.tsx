@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 
+import LogoutIcon from '@mui/icons-material/Logout';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Button,
   Dialog,
@@ -7,8 +9,6 @@ import {
   DialogTitle,
   Grid,
 } from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
-import LoadingButton from '@mui/lab/LoadingButton';
 
 import { SignOutProps } from '../common/interfaces';
 

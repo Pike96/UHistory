@@ -1,6 +1,7 @@
 import React, { FC, SyntheticEvent } from 'react';
 
 import { Alert, Snackbar, SnackbarCloseReason } from '@mui/material';
+
 import { NotificationProps } from '../common/interfaces';
 
 const SnackbarNotification: FC<NotificationProps> = ({

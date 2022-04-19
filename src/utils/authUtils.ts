@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { setLocalBrowserStorage, removeCachedAuthToken } from './browserUtils';
+
 import { AuthOption, ErrorMessage } from '../common/interfaces';
 import * as store from '../common/store';
+import { removeCachedAuthToken, setLocalBrowserStorage } from './browserUtils';
 
 export function auth(option: AuthOption): Promise<string> {
   return new Promise<string>((resolve) => {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { NotificationData, SpecialMessage } from '../common/interfaces';
 import SnackbarNotification from '../components/SnackbarNotification';
 

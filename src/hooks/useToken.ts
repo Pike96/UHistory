@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
 import * as store from '../common/store';
 import { getLocalBrowserStorage } from '../utils/browserUtils';
 

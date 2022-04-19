@@ -1,9 +1,11 @@
 import * as React from 'react';
+
+import { Link } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import { Link } from '@mui/material';
+
 import { getTimeFromTimeStamp } from '../utils/timeUtils';
 
 const HistoryList = ({ dailyHistory }: any) => {

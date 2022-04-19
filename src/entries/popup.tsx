@@ -1,18 +1,18 @@
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/700.css';
+
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { ThemeProvider } from '@emotion/react';
 
+import { ThemeProvider } from '@emotion/react';
 import Grid from '@mui/material/Grid';
 
 import theme from '../common/theme';
-import AuthView from '../views/AuthView';
-import BackupView from '../views/BackupView';
-
-import '@fontsource/ibm-plex-sans/500.css';
-import '@fontsource/ibm-plex-sans/700.css';
 import Terms from '../components/Terms';
 import useNotification from '../hooks/useNotification';
 import useToken from '../hooks/useToken';
+import AuthView from '../views/AuthView';
+import BackupView from '../views/BackupView';
 
 const Popup = () => {
   const [, notify, NotificationWrapper] = useNotification();

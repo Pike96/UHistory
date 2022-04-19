@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
+import CloseIcon from '@mui/icons-material/Close';
+import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 
 const CommonOptions = ({
   handleClose,

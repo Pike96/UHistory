@@ -1,11 +1,12 @@
 import React, { FC, useState } from 'react';
 
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Tooltip } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
-import SettingsIcon from '@mui/icons-material/Settings';
+import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import IconButton from '@mui/material/IconButton';
+
 import CommonOptions from './CommonOptions';
 
 const Transition = React.forwardRef(function Transition(

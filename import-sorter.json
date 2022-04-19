@@ -1,0 +1,9 @@
+{
+  "generalConfiguration.sortOnBeforeSave": true,
+  "importStringConfiguration.hasSemicolon": true,
+  "importStringConfiguration.maximumNumberOfImportExpressionsPerLine.type": "newLineEachExpressionAfterCountLimitExceptIfOnlyOne",
+  "importStringConfiguration.maximumNumberOfImportExpressionsPerLine.count": 80,
+  "importStringConfiguration.tabSize": 2,
+  "importStringConfiguration.trailingComma": true,
+  "importStringConfiguration.quoteMark": "single"
+}
