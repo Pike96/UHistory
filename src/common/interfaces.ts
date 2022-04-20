@@ -2,8 +2,14 @@ import { AxiosRequestHeaders } from 'axios';
 
 import { AlertColor } from '@mui/material';
 
-export interface AuthOption {
+export interface AuthOptions {
   interactive: boolean;
+  forceWebAuth?: boolean;
+}
+
+export interface TokenData {
+  token: string;
+  error?: string;
 }
 
 export interface NotificationData {
@@ -49,8 +55,9 @@ export interface ErrorMessage {
 }
 
 export enum ErrorType {
-  SignInFailed = "We can't sign in to your drive. You may have cancelled it. Please also check your browser settings",
   InvalidToken = "We can't backup right now. Please try to sign in again.",
+  UnknownSignInFailed = "We can't sign in to your drive. Please try again later",
+  UserNotApprove = "We can't sign in to your drive. You may have cancelled it.",
 }
 
 export interface FolderMetadata {
