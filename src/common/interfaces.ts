@@ -1,5 +1,3 @@
-import { AxiosRequestHeaders } from 'axios';
-
 import { AlertColor } from '@mui/material';
 
 export interface AuthOptions {
@@ -37,12 +35,6 @@ export interface SignOutProps {
   signOut(): Promise<void>;
 }
 
-export interface DriveRequestHeader extends AxiosRequestHeaders {
-  Authorization: string;
-  Accept: string;
-  'Content-Type': string;
-}
-
 export interface HistorySearchQuery {
   text: string;
   maxResults: number;
@@ -68,5 +60,3 @@ export interface FolderMetadata {
 export enum SpecialMessage {
   ForceClose = 'Force to close notification.',
 }
-
-export type AxiosMethod = 'get' | 'post';

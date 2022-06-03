@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import { AuthOptions, ErrorMessage, TokenData } from '../common/interfaces';
 import * as store from '../common/store';
 import { removeCachedAuthToken, setLocalBrowserStorage } from './browserUtils';
@@ -107,7 +105,9 @@ export async function cancelAuth(): Promise<void | ErrorMessage> {
   try {
     await Promise.all([
       token &&
-        axios.get(`https://accounts.google.com/o/oauth2/revoke?token=${token}`),
+        fetch(
+          `https://accounts.google.com/o/oauth2/revoke?token=${token}`
+        ).then((response) => response.json()),
       token && removeCachedAuthToken(token),
       setLocalBrowserStorage({ accessToken: '' }),
     ]);

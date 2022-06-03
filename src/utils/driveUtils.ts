@@ -1,5 +1,3 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-
 import { ErrorMessage, ErrorType, FolderMetadata } from '../common/interfaces';
 import * as store from '../common/store';
 import { auth } from './authUtils';
@@ -117,17 +115,16 @@ async function listAllHistoryFiles() {
 }
 
 async function getFileData(fileId: string) {
-  return await fetchDriveApiRetryAuth({
-    method: 'get',
-    url: `https://www.googleapis.com/drive/v3/files/${fileId}`,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    params: {
-      alt: 'media',
-    },
-  });
+  return await fetchDriveApiRetryAuth(
+    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+    {
+      method: 'get',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+    }
+  );
 }
 
 async function listDriveFiles(q: string) {
@@ -136,71 +133,75 @@ async function listDriveFiles(q: string) {
     fields: 'nextPageToken, files(id, name)',
   };
 
-  return await fetchDriveApiRetryAuth({
-    method: 'get',
-    url: 'https://www.googleapis.com/drive/v3/files',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    params,
-  });
+  return await fetchDriveApiRetryAuth(
+    `https://www.googleapis.com/drive/v3/files?${new URLSearchParams(params)}`,
+    {
+      method: 'get',
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+    }
+  );
 }
 
 async function createDriveFiles(folderMetadata: FolderMetadata) {
-  return await fetchDriveApiRetryAuth({
-    method: 'post',
-    url: 'https://www.googleapis.com/drive/v3/files',
-    data: {
-      ...folderMetadata,
-    },
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
+  return await fetchDriveApiRetryAuth(
+    'https://www.googleapis.com/drive/v3/files',
+    {
+      method: 'post',
+      body: folderMetadata as unknown as BodyInit,
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }),
+    }
+  );
 }
 
 async function uploadDriveFile(body: FormData) {
-  return await fetchDriveApiRetryAuth({
-    method: 'post',
-    url: 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
-    data: body,
-  });
+  return await fetchDriveApiRetryAuth(
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+    {
+      method: 'post',
+      body,
+    }
+  );
 }
 
-async function fetchDriveApiRetryAuth(config: AxiosRequestConfig) {
+async function fetchDriveApiRetryAuth(url: RequestInfo, config: RequestInit) {
   setHeaderAuth(config);
-  const result = await fetchDriveApi(axios(config));
+  const result = await fetchDriveApi(fetch(url, config));
   if (result?.error === ErrorType.InvalidToken) {
     console.log('Error occurs, ', store.getToken());
     await auth({ interactive: false });
     await wait(900);
     console.log('auth interactive false, ', store.getToken());
     setHeaderAuth(config);
-    return await fetchDriveApi(axios(config));
+    return await fetchDriveApi(fetch(url, config));
   } else {
     return result;
   }
 }
 
-function setHeaderAuth(config: AxiosRequestConfig) {
+function setHeaderAuth(config: any) {
   const authValue = `Bearer ${store.getToken()}`;
 
   if (config?.headers) {
-    config.headers.Authorization = authValue;
+    config.headers.set('Authorization', authValue);
   } else {
-    config.headers = {
+    config.headers = new Headers({
       Authorization: authValue,
-    };
+    });
   }
 }
 
-async function fetchDriveApi(axiosPromise: Promise<AxiosResponse<any, any>>) {
+async function fetchDriveApi(fetchPromise: Promise<Response>) {
   return new Promise<any | ErrorMessage>((resolve) => {
-    axiosPromise
-      .then((result) => {
-        resolve(result.data);
+    fetchPromise
+      .then((response) => response.json())
+      .then((data) => {
+        resolve(data);
       })
       .catch(async (error) => {
         const errorData = error?.response?.data;
