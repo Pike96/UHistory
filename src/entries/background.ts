@@ -3,22 +3,18 @@ import { backup, generateFilename } from '../utils/backupUtils';
 import { getLocalBrowserStorage } from '../utils/browserUtils';
 import { getMonthDiffMoment, wait } from '../utils/timeUtils';
 
-const MINUTES_IN_MILLISECONDS = 60 * 1000;
+const MINUTE_IN_MILLISECONDS = 60 * 1000;
 
 init();
 
 function init() {
-  setInterval(updateTokenSilently, MINUTES_IN_MILLISECONDS);
+  updateTokenAndBackupSilently();
+  setInterval(updateTokenAndBackupSilently, MINUTE_IN_MILLISECONDS);
 }
 
-async function updateTokenSilently() {
+async function updateTokenAndBackupSilently() {
   const lastUpdated = (await getLocalBrowserStorage('tokenLastUpdated'))
     ?.tokenLastUpdated;
-
-  console.log(
-    '🚀 ~ file: background.ts ~ line 17 ~ updateTokenSilently ~ lastUpdated',
-    lastUpdated
-  );
 
   if (!lastUpdated) {
     return;
@@ -26,9 +22,8 @@ async function updateTokenSilently() {
 
   if (
     new Date().getTime() - parseInt(lastUpdated) >
-    57 * MINUTES_IN_MILLISECONDS
+    57 * MINUTE_IN_MILLISECONDS
   ) {
-    console.log('Fire!');
     await auth({ interactive: false });
     await wait(9000);
     backupLastMonthHistory();
@@ -47,5 +42,4 @@ async function backupLastMonthHistory() {
   const fileName = generateFilename(monthDiffMoment, tag);
 
   await backup(folderName, fileName, monthDiffMoment, () => {});
-  console.log('Backuped!');
 }
