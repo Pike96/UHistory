@@ -25,6 +25,9 @@ export async function readHistoryFromDrive() {
   const historyMap = new Map();
   for (const file of files) {
     for (const item of await getFileData(file.id)) {
+      if (!item?.lastVisitTime) {
+        break;
+      }
       const date = getDateStringFromTimestamp(item.lastVisitTime);
       const newCount = (countMap.has(date) ? countMap.get(date) : 0) + 1;
       maxCount = Math.max(maxCount, newCount);
