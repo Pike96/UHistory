@@ -1,7 +1,7 @@
 import { auth } from '../utils/authUtils';
 import { backup, generateFilename } from '../utils/backupUtils';
 import { getLocalBrowserStorage } from '../utils/browserUtils';
-import { getMonthDiffMoment, wait } from '../utils/timeUtils';
+import { getMonthDiffDate, wait } from '../utils/timeUtils';
 
 const MINUTE_IN_MILLISECONDS = 60 * 1000;
 
@@ -38,8 +38,8 @@ async function backupLastMonthHistory() {
   }
 
   const tag = (await getLocalBrowserStorage('tag'))?.tag;
-  const monthDiffMoment = getMonthDiffMoment(1);
-  const fileName = generateFilename(monthDiffMoment, tag);
+  const monthDiffDate = getMonthDiffDate(1);
+  const fileName = generateFilename(monthDiffDate, tag);
 
-  await backup(folderName, fileName, monthDiffMoment, () => {});
+  await backup(folderName, fileName, monthDiffDate, () => {});
 }

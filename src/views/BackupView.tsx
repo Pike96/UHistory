@@ -1,42 +1,40 @@
 import React, { FC, useEffect, useState } from 'react';
 
-import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 import AddToDriveIcon from '@mui/icons-material/AddToDrive';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { Button, ButtonGroup, Grid, Typography } from '@mui/material';
 
 import { BackupViewProps, ErrorType } from '../common/interfaces';
-import { cancelAuth } from '../utils/authUtils';
-
-import SignOut from '../components/SignOut';
-import { getMonthDiffMoment, getMonthName, wait } from '../utils/timeUtils';
-import moment from 'moment';
 import PopupOptions from '../components/PopupOptions';
+import SignOut from '../components/SignOut';
 import { useFolderName, useTag } from '../hooks/optionsHooks';
+import { cancelAuth } from '../utils/authUtils';
 import { backup, generateFilename } from '../utils/backupUtils';
+import { getMonthDiffDate, getMonthName, wait } from '../utils/timeUtils';
 
 const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);
   const [monthDiff, setMonthDiff] = useState(1);
-  const [monthDiffMoment, setMonthDiffMoment] = useState<moment.Moment>(
-    getMonthDiffMoment(monthDiff)
+  const [monthDiffDate, setMonthDiffDate] = useState<Date>(
+    getMonthDiffDate(monthDiff)
   );
   const [fileName, setFileName] = useState('');
   const [folderName, updateFolderName] = useFolderName();
   const [tag, updateTag] = useTag();
 
   const updateFilename = () => {
-    setFileName(generateFilename(monthDiffMoment, tag));
+    setFileName(generateFilename(monthDiffDate, tag));
   };
 
   const updateMonthDiff = (_monthDiff: number) => {
     setMonthDiff(_monthDiff);
-    setMonthDiffMoment(getMonthDiffMoment(_monthDiff));
+    setMonthDiffDate(getMonthDiffDate(_monthDiff));
   };
 
   const backupFile = async () => {
     try {
-      await backup(folderName, fileName, monthDiffMoment, notify);
+      await backup(folderName, fileName, monthDiffDate, notify);
     } catch (error: any) {
       if (error.message === ErrorType.InvalidToken) {
         await signOut(ErrorType.InvalidToken);
@@ -107,7 +105,7 @@ const BackupView: FC<BackupViewProps> = ({ notify, setToken }) => {
               variant={monthDiff === _monthDiff ? 'contained' : undefined}
               onClick={() => updateMonthDiff(_monthDiff)}
             >
-              {getMonthName(getMonthDiffMoment(_monthDiff))}
+              {getMonthName(getMonthDiffDate(_monthDiff))}
             </Button>
           ))}
         </ButtonGroup>
