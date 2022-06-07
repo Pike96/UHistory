@@ -9,5 +9,6 @@
             ],
             "url": "http://json.schemastore.org/chrome-manifest"
         }
-    ]
+    ],
+    "workbench.colorTheme": "Tomorrow Night Blue"
 }

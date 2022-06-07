@@ -10,7 +10,7 @@ import { getMonthName, getYearName } from './timeUtils';
 export async function backup(
   folderName: string,
   fileName: string,
-  monthDiffMoment: moment.Moment,
+  monthDiffDate: Date,
   notify: Function
 ) {
   let folderId = await getFolderIdFromDrive(folderName);
@@ -21,7 +21,7 @@ export async function backup(
     });
   } else {
     folderId ||= await createFolderInDrive(folderName);
-    const historyData = await readBrowserHistory(monthDiffMoment);
+    const historyData = await readBrowserHistory(monthDiffDate);
 
     if (historyData?.length === 0) {
       notify({
@@ -50,8 +50,8 @@ export async function backup(
   }
 }
 
-export function generateFilename(monthDiffMoment: moment.Moment, tag: string) {
-  return `UHB${getYearName(monthDiffMoment)}${getMonthName(
-    monthDiffMoment
+export function generateFilename(monthDiffDate: Date, tag: string) {
+  return `UHB${getYearName(monthDiffDate)}${getMonthName(
+    monthDiffDate
   )}${tag}.json`;
 }

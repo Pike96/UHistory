@@ -14,7 +14,5 @@ U means Unlimited! Chrome only saves 90 days of history. Use this extension and 
 
 - Read saved history on Goolge Drive.
 
-- Not available on some browsers like Microsoft Edge, Brave, and Sidekick
-
 --------------------------------
 [webstore]:https://chrome.google.com/webstore/detail/u-history/nkokmdpokpgocgabofnpkandjgchljgf

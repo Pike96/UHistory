@@ -44,7 +44,9 @@ const Reader = () => {
   };
 
   useEffect(() => {
-    loadData();
+    if (token) {
+      loadData();
+    }
   }, [token]);
 
   return (

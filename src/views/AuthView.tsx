@@ -1,18 +1,25 @@
 import React, { FC, useState } from 'react';
 
-import { Grid } from '@mui/material';
 import CloudIcon from '@mui/icons-material/Cloud';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { Grid } from '@mui/material';
 
-import { auth } from '../utils/authUtils';
 import { AuthViewProps, ErrorType, SpecialMessage } from '../common/interfaces';
+import { auth } from '../utils/authUtils';
 
 const AuthView: FC<AuthViewProps> = ({ notify, setToken }) => {
   const [loading, setLoading] = useState(false);
 
+  const handleErrorMessage = (message: string | undefined) => {
+    if (message?.includes('The user did not approve access')) {
+      return ErrorType.UserNotApprove;
+    }
+    return message || ErrorType.UnknownSignInFailed;
+  };
+
   const handleAuthClick = async (): Promise<void> => {
     setLoading(true);
-    const token = await auth({ interactive: true });
+    const { token, error } = await auth({ interactive: true });
     setLoading(false);
 
     if (token) {
@@ -23,7 +30,7 @@ const AuthView: FC<AuthViewProps> = ({ notify, setToken }) => {
       });
     } else {
       notify({
-        message: ErrorType.SignInFailed,
+        message: handleErrorMessage(error),
         severity: 'error',
       });
     }

@@ -23,13 +23,22 @@ export function removeCachedAuthToken(token: string): Promise<void> {
 }
 
 export async function readBrowserHistory(
-  monthDiffMoment: moment.Moment
+  monthDiffDate: Date
 ): Promise<chrome.history.HistoryItem[]> {
+  const startTime = new Date(monthDiffDate);
+  startTime.setDate(1);
+  startTime.setHours(0, 0, 0, 0);
+
+  const endTime = new Date(monthDiffDate);
+  endTime.setMonth(endTime.getMonth() + 1);
+  endTime.setDate(1);
+  endTime.setHours(0, 0, 0, 0);
+
   const query: chrome.history.HistoryQuery = {
     text: '',
     maxResults: 9_999_999,
-    startTime: monthDiffMoment.startOf('month').valueOf(),
-    endTime: monthDiffMoment.endOf('month').valueOf(),
+    startTime: startTime.getTime(),
+    endTime: endTime.getTime(),
   };
 
   return await getHistoryData(query);

@@ -1,15 +1,16 @@
-import moment from 'moment';
-
-export function getMonthName(_moment: moment.Moment): string | undefined {
-  return _moment.format('MMM');
+export function getMonthName(date: Date): string | undefined {
+  return date.toLocaleString('default', { month: 'short' });
 }
 
-export function getYearName(_moment: moment.Moment): string | undefined {
-  return _moment.format('YYYY');
+export function getYearName(date: Date): number | undefined {
+  return date.getFullYear();
 }
 
-export function getMonthDiffMoment(monthDiff: number): moment.Moment {
-  return moment.utc().subtract(monthDiff, 'months');
+export function getMonthDiffDate(monthDiff: number): Date {
+  const date = new Date();
+  date.setDate(1);
+  date.setMonth(date.getMonth() - monthDiff);
+  return date;
 }
 
 export function wait(ms: number): Promise<void> {
