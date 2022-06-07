@@ -176,10 +176,8 @@ async function fetchDriveApiRetryAuth(url: RequestInfo, config: RequestInit) {
   setHeaderAuth(config);
   const result = await fetchDriveApi(fetch(url, config));
   if (result?.error === ErrorType.InvalidToken) {
-    console.log('Error occurs, ', store.getToken());
     await auth({ interactive: false });
     await wait(900);
-    console.log('auth interactive false, ', store.getToken());
     setHeaderAuth(config);
     return await fetchDriveApi(fetch(url, config));
   } else {
@@ -204,26 +202,32 @@ async function fetchDriveApi(fetchPromise: Promise<Response>) {
     fetchPromise
       .then((response) => response.json())
       .then((data) => {
-        resolve(data);
-      })
-      .catch(async (error) => {
-        const errorData = error?.response?.data;
-
-        if (errorData?.error?.message === 'Invalid Credentials') {
-          resolve({
-            error: ErrorType.InvalidToken,
-          });
-        } else if (isString(errorData)) {
-          resolve({
-            error: errorData,
-          });
-        } else if (errorData?.error) {
-          resolve(errorData?.error);
-        } else {
-          resolve(null);
+        if (data?.error) {
+          catchDriveApiError(data.error, resolve);
         }
-      });
+        else {
+          resolve(data);
+        }
+      })
   });
+}
+
+function catchDriveApiError(error: any, resolve: (value: any) => void) {
+  if (error.message === 'Invalid Credentials') {
+    resolve({
+      error: ErrorType.InvalidToken,
+    });
+  } else if (error.message) {
+    resolve({
+      error: error.message,
+    });
+  } else if (isString(error)) {
+    resolve({
+      error,
+    });
+  } else {
+    resolve(null);
+  }
 }
 
 function isString(data: any) {
